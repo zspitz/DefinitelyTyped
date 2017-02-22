@@ -1,6 +1,6 @@
 {
     "extends": "../tslint.json",
     "rules": {
-        "interface-name": false
+        "forbidden-types": false
     }
 }

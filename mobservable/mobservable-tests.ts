@@ -22,7 +22,7 @@ export function testObservable() {
 }
 
 export function testAnnotations() {
-    var order1totals:number[] = [];
+    var order1totals: number[] = [];
     var order1 = new Order();
     var order2 = new Order();
 
@@ -42,15 +42,15 @@ export function testAnnotations() {
 };
 
 export function testTyping() {
-    var ar: Mobservable.IObservableArray<number> = mobservable.makeReactive([1, 2]);
-    ar.observe((d: Mobservable.IArrayChange<number>|Mobservable.IArraySplice<number>) => {
+    var ar: mobservable.ObservableArray<number> = mobservable.makeReactive([1, 2]);
+    ar.observe((d: mobservable.ArrayChange<number> | mobservable.ArraySplice<number>) => {
         console.log(d.type);
     });
 
-    var ar2: Mobservable.IObservableArray<number> = mobservable([1, 2]);
-    ar2.observe((d: Mobservable.IArrayChange<number>|Mobservable.IArraySplice<number>) => {
+    var ar2: mobservable.ObservableArray<number> = mobservable([1, 2]);
+    ar2.observe((d: mobservable.ArrayChange<number> | mobservable.ArraySplice<number>) => {
         console.log(d.type);
     });
 
-    var x: Mobservable.IObservableValue<number> = mobservable(3);
+    var x: mobservable.ObservableValue<number> = mobservable(3);
 }

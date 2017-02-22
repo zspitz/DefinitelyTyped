@@ -170,9 +170,9 @@ const point3 = {latitude: 0, longitude: 15.5};
 const start  = {latitude: 0, longitude: 0};
 const end    = {latitude: 0, longitude: 15};
 
-const isInLine1 = geolib.isPointInLine(point1, start, end); //-> false;
-const isInLine2 = geolib.isPointInLine(point2, start, end); //-> true;
-const isInLine3 = geolib.isPointInLine(point3, start, end); //-> false;
+const isInLine1 = geolib.isPointInLine(point1, start, end); // -> false;
+const isInLine2 = geolib.isPointInLine(point2, start, end); // -> true;
+const isInLine3 = geolib.isPointInLine(point3, start, end); // -> false;
 
 
 let convertResult: number = geolib.convertUnit('km', 14213, 2); // -> 14,21
