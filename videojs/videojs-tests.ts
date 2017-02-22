@@ -2,7 +2,7 @@
 
 import * as videojs from 'videojs';
 
-videojs("example_video_1").ready(function(){
+videojs("example_video_1").ready(function() {
 	// EXAMPLE: Start playing the video.
 	this.play();
 
@@ -63,8 +63,7 @@ videojs("example_video_1").ready(function(){
 });
 
 function testEvents(myPlayer: videojs.Player) {
-	const myFunc = function() {
-		const myPlayer: videojs.Player = this;
+	const myFunc = function(this: videojs.Player) {
 		// Do something when the event is fired
 	};
 	myPlayer.on("error", myFunc);
@@ -72,16 +71,14 @@ function testEvents(myPlayer: videojs.Player) {
 	myPlayer.off("error", myFunc);
 
 
-	const myFuncWithArg = function(e: Event) {
-		const myPlayer: videojs.Player = this;
+	const myFuncWithArg = function(this: videojs.Player, e: Event) {
 		// Do something when the event is fired
 	};
 	myPlayer.on("volumechange", myFuncWithArg);
 	// Removes all listeners for the given event type.
 	myPlayer.off("volumechange");
 
-
-	myPlayer.on("loadeddata", function() { /* Some handler. */ });
+	myPlayer.on("loadeddata", () => { /* Some handler. */ });
 	// Removes all listeners.
 	myPlayer.off();
 }
