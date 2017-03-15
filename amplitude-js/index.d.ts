@@ -2,8 +2,9 @@
 // Project: https://github.com/amplitude/Amplitude-Javascript
 // Definitions by: Arvydas Sidorenko <https://github.com/Asido>
 // Definitions: https://github.com/Asido/DefinitelyTyped
+// TypeScript Version: 2.2
 
-declare module amplitude {
+declare namespace amplitude {
     interface Config {
         batchEvents?: boolean;
         cookieExpiration?: number;
@@ -33,10 +34,7 @@ declare module amplitude {
         unset(key: string): Identify;
     }
 
-    export function init(apiKey: string): void;
-    export function init(apiKey: string, userId: string): void;
-    export function init(apiKey: string, userId: string, options: Config): void;
-    export function init(apiKey: string, userId: string, options: Config, callback: () => void): void;
+    export function init(apiKey: string, userId?: string, options?: Config, callback?: () => void): void;
 
     export function setVersionName(version: string): void;
     export function setUserId(userId: string): void;
@@ -46,16 +44,14 @@ declare module amplitude {
 
     export function identify(identify: Identify): void;
 
-    export function setUserProperties(properties: Object): void;
+    export function setUserProperties(properties: object): void;
     export function clearUserProperties(): void;
 
     export function setOptOut(optOut: boolean): void;
 
     export function setGroup(groupType: string, groupName: string | string[]): void;
 
-    export function logEvent(event: string): void;
-    export function logEvent(event: string, data: Object): void;
-    export function logEvent(event: string, data: Object, callback: (httpCode: number, response: any) => void): void;
+    export function logEvent(event: string, data?: object, callback?: (httpCode: number, response: any) => void): void;
 
     export var options: Config;
 }
