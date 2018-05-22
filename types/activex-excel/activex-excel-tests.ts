@@ -249,7 +249,8 @@ const setColumnVisibility = (visible: boolean) => {
             return;
         }
 
-        const enumerator = new Enumerator<Excel.Worksheet | Excel.Chart | Excel.DialogSheet>(book.Worksheets);
+        // const enumerator = new Enumerator<Excel.Worksheet | Excel.Chart | Excel.DialogSheet>(book.Worksheets);
+        const enumerator = new Enumerator(book.Worksheets);
         enumerator.moveFirst();
         while (!enumerator.atEnd()) {
             const wks = enumerator.item() as Excel.Worksheet;

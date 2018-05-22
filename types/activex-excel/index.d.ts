@@ -8911,6 +8911,11 @@ declare namespace Excel {
     }
 }
 
+interface EnumeratorConstructor {
+    // we need this because there are two overloads for Item on the Sheets object
+    new(sheets: Excel.Sheets): Enumerator<Excel.Worksheet | Excel.Chart | Excel.DialogSheet>;
+}
+
 interface ActiveXObject {
     on(obj: Excel.Application, event: 'GetIDsOfNames', argNames: ['riid', 'rgszNames', 'cNames', 'lcid', 'rgdispid'], handler: (this: Excel.Application, parameter: {readonly riid: stdole.GUID, readonly rgszNames: number, readonly cNames: number, readonly lcid: number, rgdispid: number}) => void): void;
     on(obj: Excel.Application, event: 'GetTypeInfo', argNames: ['itinfo', 'lcid', 'pptinfo'], handler: (this: Excel.Application, parameter: {readonly itinfo: number, readonly lcid: number, pptinfo: undefined}) => void): void;
