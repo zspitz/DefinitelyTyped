@@ -6564,7 +6564,10 @@ declare namespace Excel {
         UseStandardHeight: any;
         UseStandardWidth: any;
         readonly Validation: Validation;
-        Value(RangeValueDataType?: XlRangeValueDataType): any;
+
+        // Technically, Value is typed as Value(RangeValueDataType?: XlRangeValueDataType): any;
+        // but it is far more useful to expose Value as a property
+        Value: any;
         Value2: any;
         VerticalAlignment: any;
         readonly Width: any;
@@ -9007,7 +9010,6 @@ interface ActiveXObject {
     set(obj: Excel.Chart, propertyName: 'HasAxis', parameterTypes: [any, any], newValue: any): void;
     set(obj: Excel.Workbook, propertyName: 'Colors', parameterTypes: [any], newValue: any): void;
     set(obj: Excel.Range, propertyName: 'Value', parameterTypes: [Excel.XlRangeValueDataType], newValue: any): void;
-    set(obj: Excel.Range, propertyName: 'Value', newValue: any): void; // because Value is defined on the type as a method, not a property
 }
 
 interface ActiveXObjectNameMap {
