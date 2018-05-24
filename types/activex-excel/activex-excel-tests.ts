@@ -17,6 +17,8 @@ const inCollection = <T = any>(collection: { Item(index: any): T }, index: strin
 };
 
 const app = new ActiveXObject('Excel.Application');
+app.Visible = true;
+WScript.Quit();
 
 // create a workbook -- https://msdn.microsoft.com/en-us/vba/excel-vba/articles/create-a-workbook
 const newBook = app.Workbooks.Add();

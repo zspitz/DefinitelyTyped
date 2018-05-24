@@ -2,13 +2,21 @@
 // Project: https://msdn.microsoft.com/en-us/library/fp179694.aspx
 // Definitions by: Zev Spitz <https://github.com/zspitz>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// TypeScript Version: 2.6
+// TypeScript Version: 2.8
 
 /// <reference types="activex-office" />
 /// <reference types="activex-vbide" />
 /// <reference types="activex-stdole" />
 
 declare namespace Excel {
+    type InternationalResult<T> =
+        T extends XlApplicationInternationalStrings ? string :
+        T extends XlApplicationInternationalNumbers ? number :
+        T extends XlApplicationInternationalBooleans ? boolean :
+        any;
+
+    type LineStyle = XlLineStyle | Constants.xlGray25 | Constants.xlGray50 | Constants.xlGray75 | Constants.xlAutomatic;
+
     const enum Constants {
         xl3DBar = -4099,
         xl3DEffects1 = 13,
@@ -179,6 +187,33 @@ declare namespace Excel {
         xlWorksheetShort = 5,
     }
 
+    const enum FunctionCategory {
+        Commands = 10,
+        Customizing = 11,
+        Database = 6,
+        DateAndTime = 2,
+        DDEAndExternal = 13,
+        Financial = 1,
+        Information = 9,
+        Logical = 8,
+        LookupAndReference = 5,
+        MacroControl = 12,
+        MathAndTrig = 3,
+        Statistical = 4,
+        Text = 7,
+        UserDefined = 14,
+    }
+
+    const enum InputBoxReturnType {
+        Formula = 0,
+        Number = 1,
+        String = 2,
+        Boolean = 4,
+        Range = 8,
+        ErrorValue = 16,
+        SafeArray = 64,
+    }
+
     const enum XlAboveBelow {
         xlAboveAverage = 0,
         xlAboveStdDev = 4,
@@ -210,53 +245,61 @@ declare namespace Excel {
         xlAllocateValue = 1,
     }
 
-    const enum XlApplicationInternational {
-        xl24HourClock = 33,
-        xl4DigitYears = 43,
+    const enum XlApplicationInternationalStrings {
         xlAlternateArraySeparator = 16,
         xlColumnSeparator = 14,
-        xlCountryCode = 1,
-        xlCountrySetting = 2,
-        xlCurrencyBefore = 37,
         xlCurrencyCode = 25,
-        xlCurrencyDigits = 27,
-        xlCurrencyLeadingZeros = 40,
-        xlCurrencyMinusSign = 38,
-        xlCurrencyNegative = 28,
-        xlCurrencySpaceBefore = 36,
-        xlCurrencyTrailingZeros = 39,
-        xlDateOrder = 32,
-        xlDateSeparator = 17,
-        xlDayCode = 21,
-        xlDayLeadingZero = 42,
         xlDecimalSeparator = 3,
         xlGeneralFormatName = 26,
-        xlHourCode = 22,
         xlLeftBrace = 12,
         xlLeftBracket = 10,
         xlListSeparator = 5,
         xlLowerCaseColumnLetter = 9,
         xlLowerCaseRowLetter = 8,
-        xlMDY = 44,
-        xlMetric = 35,
-        xlMinuteCode = 23,
-        xlMonthCode = 20,
-        xlMonthLeadingZero = 41,
-        xlMonthNameChars = 30,
-        xlNoncurrencyDigits = 29,
-        xlNonEnglishFunctions = 34,
         xlRightBrace = 13,
         xlRightBracket = 11,
+        xlUpperCaseColumnLetter = 7,
+        xlUpperCaseRowLetter = 6,
+        xlDateSeparator = 17,
+        xlDayCode = 21,
+        xlHourCode = 22,
+        xlMinuteCode = 23,
+        xlMonthCode = 20,
         xlRowSeparator = 15,
         xlSecondCode = 24,
         xlThousandsSeparator = 4,
-        xlTimeLeadingZero = 45,
         xlTimeSeparator = 18,
-        xlUpperCaseColumnLetter = 7,
-        xlUpperCaseRowLetter = 6,
-        xlWeekdayNameChars = 31,
         xlYearCode = 19,
     }
+
+    const enum XlApplicationInternationalNumbers {
+        xlCountryCode = 1,
+        xlCountrySetting = 2,
+        xlCurrencyDigits = 27,
+        xlCurrencyNegative = 28,
+        xlNoncurrencyDigits = 29,
+        xlDateOrder = 32,
+        xlMonthNameChars = 30,
+        xlWeekdayNameChars = 31,
+    }
+
+    const enum XlApplicationInternationalBooleans {
+        xl24HourClock = 33,
+        xl4DigitYears = 43,
+        xlCurrencyBefore = 37,
+        xlCurrencyLeadingZeros = 40,
+        xlCurrencyMinusSign = 38,
+        xlCurrencySpaceBefore = 36,
+        xlCurrencyTrailingZeros = 39,
+        xlDayLeadingZero = 42,
+        xlMDY = 44,
+        xlMetric = 35,
+        xlMonthLeadingZero = 41,
+        xlNonEnglishFunctions = 34,
+        xlTimeLeadingZero = 45,
+    }
+
+    type XlApplicationInternational = XlApplicationInternationalStrings | XlApplicationInternationalNumbers | XlApplicationInternationalBooleans;
 
     const enum XlApplyNamesOrder {
         xlColumnThenRow = 2,
@@ -2966,13 +3009,13 @@ declare namespace Excel {
     }
 
     interface Actions {
-        _Default(Index: any): Action;
+        _Default(Index: number | string): Action;
         readonly Application: Application;
         readonly Count: number;
         readonly Creator: XlCreator;
-        Item(Index: any): Action;
+        Item(Index: number | string): Action;
         readonly Parent: any;
-        (Index: any): Action;
+        (Index: number | string): Action;
     }
 
     class AddIn {
@@ -2996,26 +3039,17 @@ declare namespace Excel {
     }
 
     interface AddIns {
-        _Default(Index: any): AddIn;
+        _Default(Index: number | string): AddIn;
         Add(Filename: string, CopyFile?: any): AddIn;
         readonly Application: Application;
         readonly Count: number;
         readonly Creator: XlCreator;
-        Item(Index: any): AddIn;
+        Item(Index: number | string): AddIn;
         readonly Parent: any;
-        (Index: any): AddIn;
+        (Index: number | string): AddIn;
     }
 
-    interface AddIns2 {
-        _Default(Index: any): AddIn;
-        Add(Filename: string, CopyFile?: any): AddIn;
-        readonly Application: Application;
-        readonly Count: number;
-        readonly Creator: XlCreator;
-        Item(Index: any): AddIn;
-        readonly Parent: any;
-        (Index: any): AddIn;
-    }
+    type AddIns2 = AddIns;
 
     interface Adjustments {
         readonly Application: any;
@@ -3033,16 +3067,16 @@ declare namespace Excel {
         Delete(): void;
         Range: Range;
         Title: string;
-        Unprotect(Password?: any): void;
+        Unprotect(Password?: string): void;
         readonly Users: UserAccessList;
     }
 
     interface AllowEditRanges {
-        _Default(Index: any): AllowEditRange;
-        Add(Title: string, Range: Range, Password?: any): AllowEditRange;
+        _Default(Index: number | string): AllowEditRange;
+        Add(Title: string, Range: Range, Password?: string): AllowEditRange;
         readonly Count: number;
-        Item(Index: any): AllowEditRange;
-        (Index: any): AllowEditRange;
+        Item(Index: number | string): AllowEditRange;
+        (Index: number | string): AllowEditRange;
     }
 
     class Application {
@@ -3067,7 +3101,7 @@ declare namespace Excel {
         readonly ActiveWindow: Window;
         readonly ActiveWorkbook: Workbook;
         AddChartAutoFormat(Chart: any, Name: string, Description?: any): void;
-        AddCustomList(ListArray: any, ByRow?: any): void;
+        AddCustomList(ListArray: SafeArray<string> | Range, ByRow?: boolean): void;
         readonly AddIns: AddIns;
         readonly AddIns2: AddIns2;
         AlertBeforeOverwriting: boolean;
@@ -3094,7 +3128,7 @@ declare namespace Excel {
         CalculationInterruptKey: XlCalculationInterruptKey;
         readonly CalculationState: XlCalculationState;
         readonly CalculationVersion: number;
-        Caller(Index?: any): any;
+        Caller(Index?: number): Range | string | Error;
         readonly CanPlaySounds: boolean;
         readonly CanRecordSounds: boolean;
         Caption: string;
@@ -3102,9 +3136,9 @@ declare namespace Excel {
         readonly Cells: Range;
         CentimetersToPoints(Centimeters: number): number;
         readonly Charts: Sheets;
-        CheckAbort(KeepAbort?: any): void;
-        CheckSpelling(Word: string, CustomDictionary?: any, IgnoreUppercase?: any): boolean;
-        ClipboardFormats(Index?: any): any;
+        CheckAbort(KeepAbort?: boolean): void;
+        CheckSpelling(Word: string, CustomDictionary?: string, IgnoreUppercase?: boolean): boolean;
+        ClipboardFormats(Index?: any): SafeArray<XlClipboardFormat>;
         ClusterConnector: string;
         ColorButtons: boolean;
         readonly Columns: Range;
@@ -3113,7 +3147,7 @@ declare namespace Excel {
         CommandUnderlines: XlCommandUnderlines;
         ConstrainNumeric: boolean;
         ControlCharacters: boolean;
-        ConvertFormula(Formula: any, FromReferenceStyle: XlReferenceStyle, ToReferenceStyle?: any, ToAbsolute?: any, RelativeTo?: any): any;
+        ConvertFormula(Formula: string, FromReferenceStyle: XlReferenceStyle, ToReferenceStyle?: XlReferenceStyle, ToAbsolute?: XlReferenceType, RelativeTo?: Range): string;
         CopyObjectsWithCells: boolean;
         readonly Creator: XlCreator;
         Cursor: XlMousePointer;
@@ -3184,13 +3218,13 @@ declare namespace Excel {
         EnableSound: boolean;
         EnableTipWizard: boolean;
         readonly ErrorCheckingOptions: ErrorCheckingOptions;
-        Evaluate(Name: any): any;
+        Evaluate(Name: string): any;
         readonly Excel4IntlMacroSheets: Sheets;
         readonly Excel4MacroSheets: Sheets;
         ExecuteExcel4Macro(String: string): any;
         ExtendList: boolean;
         FeatureInstall: Office.MsoFeatureInstall;
-        FileConverters(Index1?: any, Index2?: any): any;
+        FileConverters(Index1?: string, Index2?: string): SafeArray;
         FileDialog(fileDialogType: Office.MsoFileDialogType): Office.FileDialog;
         readonly FileExportConverters: FileExportConverters;
         readonly FileFind: Office.IFind;
@@ -3204,23 +3238,30 @@ declare namespace Excel {
         FormulaBarHeight: number;
         GenerateGetPivotData: boolean;
         GenerateTableRefs: XlGenerateTableRefs;
-        GetCustomListContents(ListNum: number): any;
-        GetCustomListNum(ListArray: any): number;
-        GetOpenFilename(FileFilter?: any, FilterIndex?: any, Title?: any, ButtonText?: any, MultiSelect?: any): any;
-        GetPhonetic(Text?: any): string;
-        GetSaveAsFilename(InitialFilename?: any, FileFilter?: any, FilterIndex?: any, Title?: any, ButtonText?: any): any;
-        Goto(Reference?: any, Scroll?: any): void;
+        GetCustomListContents(ListNum: number): SafeArray<string>;
+        GetCustomListNum(ListArray: SafeArray<string>): number;
+
+        /** @param ButtonText Macintosh only */
+        GetOpenFilename(FileFilter?: string, FilterIndex?: number, Title?: string, ButtonText?: null, MultiSelect?: false): string;
+
+        /** @param ButtonText Macintosh only */
+        GetOpenFilename(FileFilter: string | null, FilterIndex: number | null, Title: string | null, ButtonText: null, MultiSelect: true): SafeArray<string>;
+        GetPhonetic(Text?: string): string;
+
+        /** @param ButtonText Macintosh only */
+        GetSaveAsFilename(InitialFilename?: string, FileFilter?: string, FilterIndex?: number, Title?: string, ButtonText?: undefined): string;
+        Goto(Reference?: Range | string, Scroll?: boolean): void;
         Height: number;
-        Help(HelpFile?: any, HelpContextID?: any): void;
+        Help(HelpFile?: string, HelpContextID?: number): void;
         HighQualityModeForGraphics: boolean;
         readonly Hinstance: number;
         readonly HinstancePtr: any;
         readonly Hwnd: number;
         IgnoreRemoteRequests: boolean;
         InchesToPoints(Inches: number): number;
-        InputBox(Prompt: string, Title?: any, Default?: any, Left?: any, Top?: any, HelpFile?: any, HelpContextID?: any, Type?: any): any;
+        InputBox(Prompt: string, Title?: string, Default?: string, Left?: number, Top?: number, HelpFile?: string, HelpContextID?: number, Type?: InputBoxReturnType): string | number | boolean | Range | Error | SafeArray<string> | SafeArray<number> | SafeArray<boolean>;
         Interactive: boolean;
-        International(Index?: any): any;
+        International<T>(Index: T): InternationalResult<T>;
         Intersect(Arg1: Range, Arg2: Range, Arg3?: Range, Arg4?: Range, Arg5?: Range, Arg6?: Range, Arg7?: Range, Arg8?: Range, Arg9?: Range, Arg10?: Range, Arg11?: Range, Arg12?: Range, Arg13?: Range, Arg14?: Range, Arg15?: Range, Arg16?: Range, Arg17?: Range, Arg18?: Range, Arg19?: Range, Arg20?: Range, Arg21?: Range, Arg22?: Range, Arg23?: Range, Arg24?: Range, Arg25?: Range, Arg26?: Range, Arg27?: Range, Arg28?: Range, Arg29?: Range, Arg30?: Range): Range;
         readonly IsSandboxed: boolean;
         Iteration: boolean;
@@ -3229,10 +3270,10 @@ declare namespace Excel {
         LargeOperationCellThousandCount: number;
         Left: number;
         readonly LibraryPath: string;
-        MacroOptions(Macro?: any, Description?: any, HasMenu?: any, MenuText?: any, HasShortcutKey?: any, ShortcutKey?: any, Category?: any, StatusBar?: any, HelpContextID?: any, HelpFile?: any, ArgumentDescriptions?: any): void;
+        MacroOptions(Macro?: string, Description?: string, HasMenu?: undefined, MenuText?: undefined, HasShortcutKey?: boolean, ShortcutKey?: any, Category?: Excel.FunctionCategory | string, StatusBar?: string, HelpContextID?: number, HelpFile?: string, ArgumentDescriptions?: SafeArray<string>): void;
         MailLogoff(): void;
-        MailLogon(Name?: any, Password?: any, DownloadNewMail?: any): void;
-        readonly MailSession: any;
+        MailLogon(Name?: string, Password?: string, DownloadNewMail?: boolean): void;
+        readonly MailSession: string | null;
         readonly MailSystem: XlMailSystem;
         MapPaperSize: boolean;
         readonly MathCoprocessorAvailable: boolean;
@@ -3260,11 +3301,11 @@ declare namespace Excel {
         OnData: string;
         OnDoubleClick: string;
         OnEntry: string;
-        OnKey(Key: string, Procedure?: any): void;
+        OnKey(Key: string, Procedure?: string): void;
         OnRepeat(Text: string, Procedure: string): void;
         OnSheetActivate: string;
         OnSheetDeactivate: string;
-        OnTime(EarliestTime: any, Procedure: string, LatestTime?: any, Schedule?: any): void;
+        OnTime(EarliestTime: any, Procedure: string, LatestTime?: any, Schedule?: boolean): void;
         OnUndo(Text: string, Procedure: string): void;
         OnWindow: string;
         readonly OperatingSystem: string;
@@ -3273,7 +3314,7 @@ declare namespace Excel {
         readonly Path: string;
         readonly PathSeparator: string;
         PivotTableSelection: boolean;
-        PreviousSelections(Index?: any): any;
+        PreviousSelections(Index: 1 | 2 | 3 | 4): Range | null;
         PrintCommunication: boolean;
         readonly ProductCode: string;
         PromptForSummaryInfo: boolean;
@@ -3283,10 +3324,13 @@ declare namespace Excel {
         Range(Cell1: string | Range, Cell2?: string | Range): Range;
         readonly Ready: boolean;
         readonly RecentFiles: RecentFiles;
-        RecordMacro(BasicCode?: any, XlmCode?: any): void;
+        RecordMacro(BasicCode: string): void;
+
+        /** This overload prevents recording */
+        RecordMacro(BasicCode: '', XlmCode: ''): void;
         readonly RecordRelative: boolean;
         ReferenceStyle: XlReferenceStyle;
-        RegisteredFunctions(Index1?: any, Index2?: any): any;
+        RegisteredFunctions(Index1: string | undefined, Index2?: string): any;
         RegisterXLL(Filename: string): boolean;
         Repeat(): void;
         ReplaceFormat: CellFormat;
@@ -3294,13 +3338,15 @@ declare namespace Excel {
         RollZoom: boolean;
         readonly Rows: Range;
         readonly RTD: RTD;
-        Run(Macro?: any, Arg1?: any, Arg2?: any, Arg3?: any, Arg4?: any, Arg5?: any, Arg6?: any, Arg7?: any, Arg8?: any, Arg9?: any, Arg10?: any, Arg11?: any, Arg12?: any, Arg13?: any, Arg14?: any, Arg15?: any, Arg16?: any, Arg17?: any, Arg18?: any, Arg19?: any, Arg20?: any, Arg21?: any, Arg22?: any, Arg23?: any, Arg24?: any, Arg25?: any, Arg26?: any, Arg27?: any, Arg28?: any, Arg29?: any, Arg30?: any): any;
+        Run(Macro?: string | Range | number, Arg1?: any, Arg2?: any, Arg3?: any, Arg4?: any, Arg5?: any, Arg6?: any, Arg7?: any, Arg8?: any, Arg9?: any, Arg10?: any, Arg11?: any, Arg12?: any, Arg13?: any, Arg14?: any, Arg15?: any, Arg16?: any, Arg17?: any, Arg18?: any, Arg19?: any, Arg20?: any, Arg21?: any, Arg22?: any, Arg23?: any, Arg24?: any, Arg25?: any, Arg26?: any, Arg27?: any, Arg28?: any, Arg29?: any, Arg30?: any): any;
         Save(Filename?: any): void;
         SaveISO8601Dates: boolean;
+
+        /** @deprecated */
         SaveWorkspace(Filename?: any): void;
         ScreenUpdating: boolean;
         readonly Selection: any;
-        SendKeys(Keys: any, Wait?: any): void;
+        SendKeys(Keys: string, Wait?: boolean): void;
         SetDefaultChart(FormatName?: any, Gallery?: any): void;
         SharePointVersion(bstrUrl: string): number;
         readonly Sheets: Sheets;
@@ -3323,7 +3369,15 @@ declare namespace Excel {
         StandardFont: string;
         StandardFontSize: number;
         readonly StartupPath: string;
-        StatusBar: any;
+
+        /**
+         * Get or set the text of the status bar
+         *
+         * Returns `false` if Microsoft Excel has control of the status bar.
+         *
+         * To restore the default status bar text, set the property to False ; this works even if the status bar is hidden.
+         */
+        StatusBar: string | false;
         Support(Object: any, ID: number, arg?: any): any;
         readonly TemplatesPath: string;
         readonly ThisCell: Range;
@@ -3336,7 +3390,7 @@ declare namespace Excel {
         TransitionNavigKeys: boolean;
         UILanguage: number;
         Undo(): void;
-        Union(Arg1: Range, Arg2: Range, Arg3?: any, Arg4?: any, Arg5?: any, Arg6?: any, Arg7?: any, Arg8?: any, Arg9?: any, Arg10?: any, Arg11?: any, Arg12?: any, Arg13?: any, Arg14?: any, Arg15?: any, Arg16?: any, Arg17?: any, Arg18?: any, Arg19?: any, Arg20?: any, Arg21?: any, Arg22?: any, Arg23?: any, Arg24?: any, Arg25?: any, Arg26?: any, Arg27?: any, Arg28?: any, Arg29?: any, Arg30?: any): Range;
+        Union(Arg1: Range, Arg2: Range, Arg3?: Range, Arg4?: Range, Arg5?: Range, Arg6?: Range, Arg7?: Range, Arg8?: Range, Arg9?: Range, Arg10?: Range, Arg11?: Range, Arg12?: Range, Arg13?: Range, Arg14?: Range, Arg15?: Range, Arg16?: Range, Arg17?: Range, Arg18?: Range, Arg19?: Range, Arg20?: Range, Arg21?: Range, Arg22?: Range, Arg23?: Range, Arg24?: Range, Arg25?: Range, Arg26?: Range, Arg27?: Range, Arg28?: Range, Arg29?: Range, Arg30?: Range): Range;
         readonly UsableHeight: number;
         readonly UsableWidth: number;
         UseClusterConnector: boolean;
@@ -3349,7 +3403,11 @@ declare namespace Excel {
         readonly VBE: VBIDE.VBE;
         readonly Version: string;
         Visible: boolean;
-        Volatile(Volatile?: any): void;
+
+        /**
+         * @param Volatile [Volatile=true]
+         */
+        Volatile(Volatile?: boolean): void;
         Wait(Time: any): boolean;
         WarnOnFunctionNameConflict: boolean;
         readonly Watches: Watches;
@@ -3386,7 +3444,7 @@ declare namespace Excel {
         DeleteReplacement(What: string): any;
         DisplayAutoCorrectOptions: boolean;
         readonly Parent: any;
-        ReplacementList(Index?: any): any;
+        ReplacementList(Index: number): SafeArray<string>;
         ReplaceText: boolean;
         TwoInitialCapitals: boolean;
     }
@@ -3420,55 +3478,63 @@ declare namespace Excel {
         private 'Excel.Border_typekey': Border;
         private constructor();
         readonly Application: Application;
-        Color: any;
-        ColorIndex: any;
+        Color: XlRgbColor | number;
+        ColorIndex: number | XlColorIndex;
         readonly Creator: XlCreator;
-        LineStyle: XlLineStyle | Constants.xlGray25 | Constants.xlGray50 | Constants.xlGray75 | Constants.xlAutomatic;
+        LineStyle: LineStyle;
         readonly Parent: any;
-        ThemeColor: any;
-        TintAndShade: any;
-        Weight: any;
+        ThemeColor: XlThemeColor;
+        TintAndShade: number;
+        Weight: XlBorderWeight;
     }
 
     interface Borders {
         _Default(Index: XlBordersIndex): Border;
         readonly Application: Application;
-        Color: any;
-        ColorIndex: any;
+        Color: XlRgbColor | number;
+        ColorIndex: number | XlColorIndex | null;
         readonly Count: number;
         readonly Creator: XlCreator;
         Item(Index: XlBordersIndex): Border;
-        LineStyle: any;
+        LineStyle: LineStyle;
         readonly Parent: any;
-        ThemeColor: any;
-        TintAndShade: any;
-        Value: any;
-        Weight: any;
+        ThemeColor: XlThemeColor;
+        TintAndShade: number;
+        Value: LineStyle;
+        Weight: XlBorderWeight;
         (Index: XlBordersIndex): Border;
     }
 
     interface CalculatedFields {
         _Add(Name: string, Formula: string): PivotField;
         _Default(Field: any): PivotField;
-        Add(Name: string, Formula: string, UseStandardFormula?: any): PivotField;
+
+        /**
+         * @param UseStandardFormula [UseStandardFormula=false]
+         */
+        Add(Name: string, Formula: string, UseStandardFormula?: boolean): PivotField;
         readonly Application: Application;
         readonly Count: number;
         readonly Creator: XlCreator;
-        Item(Index: any): PivotField;
+        Item(Index: number | string): PivotField;
         readonly Parent: any;
-        (Field: any): PivotField;
+        (Field: number | string): PivotField;
     }
 
     interface CalculatedItems {
         _Add(Name: string, Formula: string): PivotItem;
-        _Default(Field: any): PivotItem;
-        Add(Name: string, Formula: string, UseStandardFormula?: any): PivotItem;
+        _Default(Field: number | string): PivotItem;
+
+        /**
+         * @param UseStandardFormula [UseStandardFormula=false]
+         */
+        Add(Name: string, Formula: string, UseStandardFormula?: boolean): PivotItem;
         readonly Application: Application;
         readonly Count: number;
         readonly Creator: XlCreator;
-        Item(Index: any): PivotItem;
+        Item(Index: number | string): PivotItem;
         readonly Parent: any;
-        (Field: any): PivotItem;
+        (Field: number | string): PivotItem;
     }
 
     class CalculatedMember {
@@ -3494,13 +3560,16 @@ declare namespace Excel {
     interface CalculatedMembers {
         _Add(Name: string, Formula: string, SolveOrder?: any, Type?: any): CalculatedMember;
         _Default(Index: any): CalculatedMember;
-        Add(Name: string, Formula: any, SolveOrder?: any, Type?: any, Dynamic?: any, DisplayFolder?: any, HierarchizeDistinct?: any): CalculatedMember;
+        Add(Name: string, Formula: string, SolveOrder?: number, Type?: XlCalculatedMemberType, Dynamic?: boolean, DisplayFolder?: string, HierarchizeDistinct?: boolean): CalculatedMember;
+
+        /** @version 2013 */
+        AddCalculatedMember(Name: string, Formula: string, SolveOrder?: number, Type?: XlCalculatedMemberType, DisplayFolder?: string, MeasureGroup?: any, ParentMember?: any, NumberFormat?: any): CalculatedMember;
         readonly Application: Application;
         readonly Count: number;
         readonly Creator: XlCreator;
-        Item(Index: any): CalculatedMember;
+        Item(Index: number | string): CalculatedMember;
         readonly Parent: any;
-        (Index: any): CalculatedMember;
+        (Index: number | string): CalculatedMember;
     }
 
     class CalloutFormat {
@@ -3528,25 +3597,25 @@ declare namespace Excel {
     class CellFormat {
         private 'Excel.CellFormat_typekey': CellFormat;
         private constructor();
-        AddIndent: any;
+        AddIndent: boolean;
         readonly Application: Application;
         Borders: Borders;
         Clear(): void;
         readonly Creator: XlCreator;
         Font: Font;
-        FormulaHidden: any;
-        HorizontalAlignment: any;
-        IndentLevel: any;
+        FormulaHidden: boolean | null;
+        HorizontalAlignment: Constants.xlCenter | Constants.xlDistributed | Constants.xlJustify | Constants.xlLeft | Constants.xlRight;
+        IndentLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
         Interior: Interior;
-        Locked: any;
-        MergeCells: any;
-        NumberFormat: any;
-        NumberFormatLocal: any;
-        Orientation: any;
+        Locked: boolean | null;
+        MergeCells: boolean;
+        NumberFormat: string | null;
+        NumberFormatLocal: string | null;
+        Orientation: number | XlOrientation;
         readonly Parent: any;
-        ShrinkToFit: any;
-        VerticalAlignment: any;
-        WrapText: any;
+        ShrinkToFit: boolean | null;
+        VerticalAlignment: Constants.xlBottom | Constants.xlCenter | Constants.xlDistributed | Constants.xlJustify | Constants.xlTop;
+        WrapText: boolean | null;
     }
 
     class Characters {
@@ -3583,7 +3652,7 @@ declare namespace Excel {
 
         /** @param Type [Type=2] */
         ApplyDataLabels(Type?: XlDataLabelsType, LegendKey?: any, AutoText?: any, HasLeaderLines?: any, ShowSeriesName?: any, ShowCategoryName?: any, ShowValue?: any, ShowPercentage?: any, ShowBubbleSize?: any, Separator?: any): void;
-        ApplyLayout(Layout: number, ChartType?: any): void;
+        ApplyLayout(Layout: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10, ChartType?: XlChartType): void;
         Arcs(Index?: any): any;
         readonly Area3DGroup: ChartGroup;
         AreaGroups(Index?: any): any;
@@ -3591,14 +3660,14 @@ declare namespace Excel {
         AutoScaling: boolean;
 
         /** @param AxisGroup [AxisGroup=1] */
-        Axes(Type: any, AxisGroup?: XlAxisGroup): any;
+        Axes(Type: XlAxisType, AxisGroup?: XlAxisGroup): any;
         readonly BackWall: Walls;
         readonly Bar3DGroup: ChartGroup;
         BarGroups(Index?: any): any;
         BarShape: XlBarShape;
         Buttons(Index?: any): any;
         readonly ChartArea: ChartArea;
-        ChartGroups(Index?: any): any;
+        ChartGroups(Index?: number): ChartGroup | ChartGroups;
         ChartObjects(Index?: any): any;
         ChartStyle: any;
         readonly ChartTitle: ChartTitle;
@@ -4667,7 +4736,7 @@ declare namespace Excel {
         ShortcutMenus(Index: number): Menu;
         readonly ThisWorkbook: Workbook;
         readonly Toolbars: Toolbars;
-        Union(Arg1: Range, Arg2: Range, Arg3?: any, Arg4?: any, Arg5?: any, Arg6?: any, Arg7?: any, Arg8?: any, Arg9?: any, Arg10?: any, Arg11?: any, Arg12?: any, Arg13?: any, Arg14?: any, Arg15?: any, Arg16?: any, Arg17?: any, Arg18?: any, Arg19?: any, Arg20?: any, Arg21?: any, Arg22?: any, Arg23?: any, Arg24?: any, Arg25?: any, Arg26?: any, Arg27?: any, Arg28?: any, Arg29?: any, Arg30?: any): Range;
+        Union(Arg1: Range, Arg2: Range, Arg3?: Range, Arg4?: Range, Arg5?: Range, Arg6?: Range, Arg7?: Range, Arg8?: Range, Arg9?: Range, Arg10?: Range, Arg11?: Range, Arg12?: Range, Arg13?: Range, Arg14?: Range, Arg15?: Range, Arg16?: Range, Arg17?: Range, Arg18?: Range, Arg19?: Range, Arg20?: Range, Arg21?: Range, Arg22?: Range, Arg23?: Range, Arg24?: Range, Arg25?: Range, Arg26?: Range, Arg27?: Range, Arg28?: Range, Arg29?: Range, Arg30?: Range): Range;
         readonly Windows: Windows;
         readonly Workbooks: Workbooks;
         readonly WorksheetFunction: WorksheetFunction;
@@ -8917,95 +8986,95 @@ interface EnumeratorConstructor {
 }
 
 interface ActiveXObject {
-    on(obj: Excel.Application, event: 'GetIDsOfNames', argNames: ['riid', 'rgszNames', 'cNames', 'lcid', 'rgdispid'], handler: (this: Excel.Application, parameter: {readonly riid: stdole.GUID, readonly rgszNames: number, readonly cNames: number, readonly lcid: number, rgdispid: number}) => void): void;
-    on(obj: Excel.Application, event: 'GetTypeInfo', argNames: ['itinfo', 'lcid', 'pptinfo'], handler: (this: Excel.Application, parameter: {readonly itinfo: number, readonly lcid: number, pptinfo: undefined}) => void): void;
-    on(obj: Excel.Application, event: 'GetTypeInfoCount', argNames: ['pctinfo'], handler: (this: Excel.Application, parameter: {pctinfo: number}) => void): void;
+    on(obj: Excel.Application, event: 'GetIDsOfNames', argNames: ['riid', 'rgszNames', 'cNames', 'lcid', 'rgdispid'], handler: (this: Excel.Application, parameter: { readonly riid: stdole.GUID, readonly rgszNames: number, readonly cNames: number, readonly lcid: number, rgdispid: number }) => void): void;
+    on(obj: Excel.Application, event: 'GetTypeInfo', argNames: ['itinfo', 'lcid', 'pptinfo'], handler: (this: Excel.Application, parameter: { readonly itinfo: number, readonly lcid: number, pptinfo: undefined }) => void): void;
+    on(obj: Excel.Application, event: 'GetTypeInfoCount', argNames: ['pctinfo'], handler: (this: Excel.Application, parameter: { pctinfo: number }) => void): void;
     on(obj: Excel.Application, event: 'Invoke', argNames: Excel.EventHelperTypes.Application_Invoke_ArgNames, handler: (this: Excel.Application, parameter: Excel.EventHelperTypes.Application_Invoke_Parameter) => void): void;
-    on(obj: Excel.Application, event: 'NewWorkbook' | 'WorkbookActivate' | 'WorkbookAddinInstall' | 'WorkbookAddinUninstall' | 'WorkbookDeactivate' | 'WorkbookOpen', argNames: ['Wb'], handler: (this: Excel.Application, parameter: {readonly Wb: Excel.Workbook}) => void): void;
-    on(obj: Excel.Application, event: 'ProtectedViewWindowActivate' | 'ProtectedViewWindowDeactivate' | 'ProtectedViewWindowOpen' | 'ProtectedViewWindowResize', argNames: ['Pvw'], handler: (this: Excel.Application, parameter: {readonly Pvw: Excel.ProtectedViewWindow}) => void): void;
-    on(obj: Excel.Application, event: 'ProtectedViewWindowBeforeClose', argNames: ['Pvw', 'Reason', 'Cancel'], handler: (this: Excel.Application, parameter: {readonly Pvw: Excel.ProtectedViewWindow, readonly Reason: Excel.XlProtectedViewCloseReason, Cancel: boolean}) => void): void;
-    on(obj: Excel.Application, event: 'ProtectedViewWindowBeforeEdit', argNames: ['Pvw', 'Cancel'], handler: (this: Excel.Application, parameter: {readonly Pvw: Excel.ProtectedViewWindow, Cancel: boolean}) => void): void;
-    on(obj: Excel.Application, event: 'QueryInterface', argNames: ['riid', 'ppvObj'], handler: (this: Excel.Application, parameter: {readonly riid: stdole.GUID, ppvObj: undefined}) => void): void;
-    on(obj: Excel.Application, event: 'SheetActivate' | 'SheetCalculate' | 'SheetDeactivate', argNames: ['Sh'], handler: (this: Excel.Application, parameter: {readonly Sh: any}) => void): void;
-    on(obj: Excel.Application, event: 'SheetBeforeDoubleClick' | 'SheetBeforeRightClick', argNames: ['Sh', 'Target', 'Cancel'], handler: (this: Excel.Application, parameter: {readonly Sh: any, readonly Target: Excel.Range, Cancel: boolean}) => void): void;
-    on(obj: Excel.Application, event: 'SheetChange' | 'SheetSelectionChange', argNames: ['Sh', 'Target'], handler: (this: Excel.Application, parameter: {readonly Sh: any, readonly Target: Excel.Range}) => void): void;
-    on(obj: Excel.Application, event: 'SheetFollowHyperlink', argNames: ['Sh', 'Target'], handler: (this: Excel.Application, parameter: {readonly Sh: any, readonly Target: Excel.Hyperlink}) => void): void;
-    on(obj: Excel.Application, event: 'SheetPivotTableAfterValueChange', argNames: ['Sh', 'TargetPivotTable', 'TargetRange'], handler: (this: Excel.Application, parameter: {readonly Sh: any, readonly TargetPivotTable: Excel.PivotTable, readonly TargetRange: Excel.Range}) => void): void;
-    on(obj: Excel.Application, event: 'SheetPivotTableBeforeAllocateChanges' | 'SheetPivotTableBeforeCommitChanges', argNames: ['Sh', 'TargetPivotTable', 'ValueChangeStart', 'ValueChangeEnd', 'Cancel'], handler: (this: Excel.Application, parameter: {readonly Sh: any, readonly TargetPivotTable: Excel.PivotTable, readonly ValueChangeStart: number, readonly ValueChangeEnd: number, Cancel: boolean}) => void): void;
-    on(obj: Excel.Application, event: 'SheetPivotTableBeforeDiscardChanges', argNames: ['Sh', 'TargetPivotTable', 'ValueChangeStart', 'ValueChangeEnd'], handler: (this: Excel.Application, parameter: {readonly Sh: any, readonly TargetPivotTable: Excel.PivotTable, readonly ValueChangeStart: number, readonly ValueChangeEnd: number}) => void): void;
-    on(obj: Excel.Application, event: 'SheetPivotTableUpdate', argNames: ['Sh', 'Target'], handler: (this: Excel.Application, parameter: {readonly Sh: any, readonly Target: Excel.PivotTable}) => void): void;
-    on(obj: Excel.Application, event: 'WindowActivate' | 'WindowDeactivate' | 'WindowResize', argNames: ['Wb', 'Wn'], handler: (this: Excel.Application, parameter: {readonly Wb: Excel.Workbook, readonly Wn: Excel.Window}) => void): void;
-    on(obj: Excel.Application, event: 'WorkbookAfterSave', argNames: ['Wb', 'Success'], handler: (this: Excel.Application, parameter: {readonly Wb: Excel.Workbook, readonly Success: boolean}) => void): void;
-    on(obj: Excel.Application, event: 'WorkbookAfterXmlExport', argNames: ['Wb', 'Map', 'Url', 'Result'], handler: (this: Excel.Application, parameter: {readonly Wb: Excel.Workbook, readonly Map: Excel.XmlMap, readonly Url: string, readonly Result: Excel.XlXmlExportResult}) => void): void;
-    on(obj: Excel.Application, event: 'WorkbookAfterXmlImport', argNames: ['Wb', 'Map', 'IsRefresh', 'Result'], handler: (this: Excel.Application, parameter: {readonly Wb: Excel.Workbook, readonly Map: Excel.XmlMap, readonly IsRefresh: boolean, readonly Result: Excel.XlXmlImportResult}) => void): void;
-    on(obj: Excel.Application, event: 'WorkbookBeforeClose' | 'WorkbookBeforePrint', argNames: ['Wb', 'Cancel'], handler: (this: Excel.Application, parameter: {readonly Wb: Excel.Workbook, Cancel: boolean}) => void): void;
-    on(obj: Excel.Application, event: 'WorkbookBeforeSave', argNames: ['Wb', 'SaveAsUI', 'Cancel'], handler: (this: Excel.Application, parameter: {readonly Wb: Excel.Workbook, readonly SaveAsUI: boolean, Cancel: boolean}) => void): void;
-    on(obj: Excel.Application, event: 'WorkbookBeforeXmlExport', argNames: ['Wb', 'Map', 'Url', 'Cancel'], handler: (this: Excel.Application, parameter: {readonly Wb: Excel.Workbook, readonly Map: Excel.XmlMap, readonly Url: string, Cancel: boolean}) => void): void;
-    on(obj: Excel.Application, event: 'WorkbookBeforeXmlImport', argNames: ['Wb', 'Map', 'Url', 'IsRefresh', 'Cancel'], handler: (this: Excel.Application, parameter: {readonly Wb: Excel.Workbook, readonly Map: Excel.XmlMap, readonly Url: string, readonly IsRefresh: boolean, Cancel: boolean}) => void): void;
-    on(obj: Excel.Application, event: 'WorkbookNewChart', argNames: ['Wb', 'Ch'], handler: (this: Excel.Application, parameter: {readonly Wb: Excel.Workbook, readonly Ch: Excel.Chart}) => void): void;
-    on(obj: Excel.Application, event: 'WorkbookNewSheet', argNames: ['Wb', 'Sh'], handler: (this: Excel.Application, parameter: {readonly Wb: Excel.Workbook, readonly Sh: any}) => void): void;
-    on(obj: Excel.Application, event: 'WorkbookPivotTableCloseConnection' | 'WorkbookPivotTableOpenConnection', argNames: ['Wb', 'Target'], handler: (this: Excel.Application, parameter: {readonly Wb: Excel.Workbook, readonly Target: Excel.PivotTable}) => void): void;
-    on(obj: Excel.Application, event: 'WorkbookRowsetComplete', argNames: ['Wb', 'Description', 'Sheet', 'Success'], handler: (this: Excel.Application, parameter: {readonly Wb: Excel.Workbook, readonly Description: string, readonly Sheet: string, readonly Success: boolean}) => void): void;
-    on(obj: Excel.Application, event: 'WorkbookSync', argNames: ['Wb', 'SyncEventType'], handler: (this: Excel.Application, parameter: {readonly Wb: Excel.Workbook, readonly SyncEventType: Office.MsoSyncEventType}) => void): void;
-    on(obj: Excel.Chart, event: 'BeforeDoubleClick', argNames: ['ElementID', 'Arg1', 'Arg2', 'Cancel'], handler: (this: Excel.Chart, parameter: {readonly ElementID: number, readonly Arg1: number, readonly Arg2: number, Cancel: boolean}) => void): void;
-    on(obj: Excel.Chart, event: 'BeforeRightClick', argNames: ['Cancel'], handler: (this: Excel.Chart, parameter: {Cancel: boolean}) => void): void;
-    on(obj: Excel.Chart, event: 'GetIDsOfNames', argNames: ['riid', 'rgszNames', 'cNames', 'lcid', 'rgdispid'], handler: (this: Excel.Chart, parameter: {readonly riid: stdole.GUID, readonly rgszNames: number, readonly cNames: number, readonly lcid: number, rgdispid: number}) => void): void;
-    on(obj: Excel.Chart, event: 'GetTypeInfo', argNames: ['itinfo', 'lcid', 'pptinfo'], handler: (this: Excel.Chart, parameter: {readonly itinfo: number, readonly lcid: number, pptinfo: undefined}) => void): void;
-    on(obj: Excel.Chart, event: 'GetTypeInfoCount', argNames: ['pctinfo'], handler: (this: Excel.Chart, parameter: {pctinfo: number}) => void): void;
+    on(obj: Excel.Application, event: 'NewWorkbook' | 'WorkbookActivate' | 'WorkbookAddinInstall' | 'WorkbookAddinUninstall' | 'WorkbookDeactivate' | 'WorkbookOpen', argNames: ['Wb'], handler: (this: Excel.Application, parameter: { readonly Wb: Excel.Workbook }) => void): void;
+    on(obj: Excel.Application, event: 'ProtectedViewWindowActivate' | 'ProtectedViewWindowDeactivate' | 'ProtectedViewWindowOpen' | 'ProtectedViewWindowResize', argNames: ['Pvw'], handler: (this: Excel.Application, parameter: { readonly Pvw: Excel.ProtectedViewWindow }) => void): void;
+    on(obj: Excel.Application, event: 'ProtectedViewWindowBeforeClose', argNames: ['Pvw', 'Reason', 'Cancel'], handler: (this: Excel.Application, parameter: { readonly Pvw: Excel.ProtectedViewWindow, readonly Reason: Excel.XlProtectedViewCloseReason, Cancel: boolean }) => void): void;
+    on(obj: Excel.Application, event: 'ProtectedViewWindowBeforeEdit', argNames: ['Pvw', 'Cancel'], handler: (this: Excel.Application, parameter: { readonly Pvw: Excel.ProtectedViewWindow, Cancel: boolean }) => void): void;
+    on(obj: Excel.Application, event: 'QueryInterface', argNames: ['riid', 'ppvObj'], handler: (this: Excel.Application, parameter: { readonly riid: stdole.GUID, ppvObj: undefined }) => void): void;
+    on(obj: Excel.Application, event: 'SheetActivate' | 'SheetCalculate' | 'SheetDeactivate', argNames: ['Sh'], handler: (this: Excel.Application, parameter: { readonly Sh: any }) => void): void;
+    on(obj: Excel.Application, event: 'SheetBeforeDoubleClick' | 'SheetBeforeRightClick', argNames: ['Sh', 'Target', 'Cancel'], handler: (this: Excel.Application, parameter: { readonly Sh: any, readonly Target: Excel.Range, Cancel: boolean }) => void): void;
+    on(obj: Excel.Application, event: 'SheetChange' | 'SheetSelectionChange', argNames: ['Sh', 'Target'], handler: (this: Excel.Application, parameter: { readonly Sh: any, readonly Target: Excel.Range }) => void): void;
+    on(obj: Excel.Application, event: 'SheetFollowHyperlink', argNames: ['Sh', 'Target'], handler: (this: Excel.Application, parameter: { readonly Sh: any, readonly Target: Excel.Hyperlink }) => void): void;
+    on(obj: Excel.Application, event: 'SheetPivotTableAfterValueChange', argNames: ['Sh', 'TargetPivotTable', 'TargetRange'], handler: (this: Excel.Application, parameter: { readonly Sh: any, readonly TargetPivotTable: Excel.PivotTable, readonly TargetRange: Excel.Range }) => void): void;
+    on(obj: Excel.Application, event: 'SheetPivotTableBeforeAllocateChanges' | 'SheetPivotTableBeforeCommitChanges', argNames: ['Sh', 'TargetPivotTable', 'ValueChangeStart', 'ValueChangeEnd', 'Cancel'], handler: (this: Excel.Application, parameter: { readonly Sh: any, readonly TargetPivotTable: Excel.PivotTable, readonly ValueChangeStart: number, readonly ValueChangeEnd: number, Cancel: boolean }) => void): void;
+    on(obj: Excel.Application, event: 'SheetPivotTableBeforeDiscardChanges', argNames: ['Sh', 'TargetPivotTable', 'ValueChangeStart', 'ValueChangeEnd'], handler: (this: Excel.Application, parameter: { readonly Sh: any, readonly TargetPivotTable: Excel.PivotTable, readonly ValueChangeStart: number, readonly ValueChangeEnd: number }) => void): void;
+    on(obj: Excel.Application, event: 'SheetPivotTableUpdate', argNames: ['Sh', 'Target'], handler: (this: Excel.Application, parameter: { readonly Sh: any, readonly Target: Excel.PivotTable }) => void): void;
+    on(obj: Excel.Application, event: 'WindowActivate' | 'WindowDeactivate' | 'WindowResize', argNames: ['Wb', 'Wn'], handler: (this: Excel.Application, parameter: { readonly Wb: Excel.Workbook, readonly Wn: Excel.Window }) => void): void;
+    on(obj: Excel.Application, event: 'WorkbookAfterSave', argNames: ['Wb', 'Success'], handler: (this: Excel.Application, parameter: { readonly Wb: Excel.Workbook, readonly Success: boolean }) => void): void;
+    on(obj: Excel.Application, event: 'WorkbookAfterXmlExport', argNames: ['Wb', 'Map', 'Url', 'Result'], handler: (this: Excel.Application, parameter: { readonly Wb: Excel.Workbook, readonly Map: Excel.XmlMap, readonly Url: string, readonly Result: Excel.XlXmlExportResult }) => void): void;
+    on(obj: Excel.Application, event: 'WorkbookAfterXmlImport', argNames: ['Wb', 'Map', 'IsRefresh', 'Result'], handler: (this: Excel.Application, parameter: { readonly Wb: Excel.Workbook, readonly Map: Excel.XmlMap, readonly IsRefresh: boolean, readonly Result: Excel.XlXmlImportResult }) => void): void;
+    on(obj: Excel.Application, event: 'WorkbookBeforeClose' | 'WorkbookBeforePrint', argNames: ['Wb', 'Cancel'], handler: (this: Excel.Application, parameter: { readonly Wb: Excel.Workbook, Cancel: boolean }) => void): void;
+    on(obj: Excel.Application, event: 'WorkbookBeforeSave', argNames: ['Wb', 'SaveAsUI', 'Cancel'], handler: (this: Excel.Application, parameter: { readonly Wb: Excel.Workbook, readonly SaveAsUI: boolean, Cancel: boolean }) => void): void;
+    on(obj: Excel.Application, event: 'WorkbookBeforeXmlExport', argNames: ['Wb', 'Map', 'Url', 'Cancel'], handler: (this: Excel.Application, parameter: { readonly Wb: Excel.Workbook, readonly Map: Excel.XmlMap, readonly Url: string, Cancel: boolean }) => void): void;
+    on(obj: Excel.Application, event: 'WorkbookBeforeXmlImport', argNames: ['Wb', 'Map', 'Url', 'IsRefresh', 'Cancel'], handler: (this: Excel.Application, parameter: { readonly Wb: Excel.Workbook, readonly Map: Excel.XmlMap, readonly Url: string, readonly IsRefresh: boolean, Cancel: boolean }) => void): void;
+    on(obj: Excel.Application, event: 'WorkbookNewChart', argNames: ['Wb', 'Ch'], handler: (this: Excel.Application, parameter: { readonly Wb: Excel.Workbook, readonly Ch: Excel.Chart }) => void): void;
+    on(obj: Excel.Application, event: 'WorkbookNewSheet', argNames: ['Wb', 'Sh'], handler: (this: Excel.Application, parameter: { readonly Wb: Excel.Workbook, readonly Sh: any }) => void): void;
+    on(obj: Excel.Application, event: 'WorkbookPivotTableCloseConnection' | 'WorkbookPivotTableOpenConnection', argNames: ['Wb', 'Target'], handler: (this: Excel.Application, parameter: { readonly Wb: Excel.Workbook, readonly Target: Excel.PivotTable }) => void): void;
+    on(obj: Excel.Application, event: 'WorkbookRowsetComplete', argNames: ['Wb', 'Description', 'Sheet', 'Success'], handler: (this: Excel.Application, parameter: { readonly Wb: Excel.Workbook, readonly Description: string, readonly Sheet: string, readonly Success: boolean }) => void): void;
+    on(obj: Excel.Application, event: 'WorkbookSync', argNames: ['Wb', 'SyncEventType'], handler: (this: Excel.Application, parameter: { readonly Wb: Excel.Workbook, readonly SyncEventType: Office.MsoSyncEventType }) => void): void;
+    on(obj: Excel.Chart, event: 'BeforeDoubleClick', argNames: ['ElementID', 'Arg1', 'Arg2', 'Cancel'], handler: (this: Excel.Chart, parameter: { readonly ElementID: number, readonly Arg1: number, readonly Arg2: number, Cancel: boolean }) => void): void;
+    on(obj: Excel.Chart, event: 'BeforeRightClick', argNames: ['Cancel'], handler: (this: Excel.Chart, parameter: { Cancel: boolean }) => void): void;
+    on(obj: Excel.Chart, event: 'GetIDsOfNames', argNames: ['riid', 'rgszNames', 'cNames', 'lcid', 'rgdispid'], handler: (this: Excel.Chart, parameter: { readonly riid: stdole.GUID, readonly rgszNames: number, readonly cNames: number, readonly lcid: number, rgdispid: number }) => void): void;
+    on(obj: Excel.Chart, event: 'GetTypeInfo', argNames: ['itinfo', 'lcid', 'pptinfo'], handler: (this: Excel.Chart, parameter: { readonly itinfo: number, readonly lcid: number, pptinfo: undefined }) => void): void;
+    on(obj: Excel.Chart, event: 'GetTypeInfoCount', argNames: ['pctinfo'], handler: (this: Excel.Chart, parameter: { pctinfo: number }) => void): void;
     on(obj: Excel.Chart, event: 'Invoke', argNames: Excel.EventHelperTypes.Chart_Invoke_ArgNames, handler: (this: Excel.Chart, parameter: Excel.EventHelperTypes.Chart_Invoke_Parameter) => void): void;
-    on(obj: Excel.Chart, event: 'MouseDown' | 'MouseMove' | 'MouseUp', argNames: ['Button', 'Shift', 'x', 'y'], handler: (this: Excel.Chart, parameter: {readonly Button: number, readonly Shift: number, readonly x: number, readonly y: number}) => void): void;
-    on(obj: Excel.Chart, event: 'QueryInterface', argNames: ['riid', 'ppvObj'], handler: (this: Excel.Chart, parameter: {readonly riid: stdole.GUID, ppvObj: undefined}) => void): void;
-    on(obj: Excel.Chart, event: 'Select', argNames: ['ElementID', 'Arg1', 'Arg2'], handler: (this: Excel.Chart, parameter: {readonly ElementID: number, readonly Arg1: number, readonly Arg2: number}) => void): void;
-    on(obj: Excel.Chart, event: 'SeriesChange', argNames: ['SeriesIndex', 'PointIndex'], handler: (this: Excel.Chart, parameter: {readonly SeriesIndex: number, readonly PointIndex: number}) => void): void;
-    on(obj: Excel.OLEObject, event: 'GetIDsOfNames', argNames: ['riid', 'rgszNames', 'cNames', 'lcid', 'rgdispid'], handler: (this: Excel.OLEObject, parameter: {readonly riid: stdole.GUID, readonly rgszNames: number, readonly cNames: number, readonly lcid: number, rgdispid: number}) => void): void;
-    on(obj: Excel.OLEObject, event: 'GetTypeInfo', argNames: ['itinfo', 'lcid', 'pptinfo'], handler: (this: Excel.OLEObject, parameter: {readonly itinfo: number, readonly lcid: number, pptinfo: undefined}) => void): void;
-    on(obj: Excel.OLEObject, event: 'GetTypeInfoCount', argNames: ['pctinfo'], handler: (this: Excel.OLEObject, parameter: {pctinfo: number}) => void): void;
+    on(obj: Excel.Chart, event: 'MouseDown' | 'MouseMove' | 'MouseUp', argNames: ['Button', 'Shift', 'x', 'y'], handler: (this: Excel.Chart, parameter: { readonly Button: number, readonly Shift: number, readonly x: number, readonly y: number }) => void): void;
+    on(obj: Excel.Chart, event: 'QueryInterface', argNames: ['riid', 'ppvObj'], handler: (this: Excel.Chart, parameter: { readonly riid: stdole.GUID, ppvObj: undefined }) => void): void;
+    on(obj: Excel.Chart, event: 'Select', argNames: ['ElementID', 'Arg1', 'Arg2'], handler: (this: Excel.Chart, parameter: { readonly ElementID: number, readonly Arg1: number, readonly Arg2: number }) => void): void;
+    on(obj: Excel.Chart, event: 'SeriesChange', argNames: ['SeriesIndex', 'PointIndex'], handler: (this: Excel.Chart, parameter: { readonly SeriesIndex: number, readonly PointIndex: number }) => void): void;
+    on(obj: Excel.OLEObject, event: 'GetIDsOfNames', argNames: ['riid', 'rgszNames', 'cNames', 'lcid', 'rgdispid'], handler: (this: Excel.OLEObject, parameter: { readonly riid: stdole.GUID, readonly rgszNames: number, readonly cNames: number, readonly lcid: number, rgdispid: number }) => void): void;
+    on(obj: Excel.OLEObject, event: 'GetTypeInfo', argNames: ['itinfo', 'lcid', 'pptinfo'], handler: (this: Excel.OLEObject, parameter: { readonly itinfo: number, readonly lcid: number, pptinfo: undefined }) => void): void;
+    on(obj: Excel.OLEObject, event: 'GetTypeInfoCount', argNames: ['pctinfo'], handler: (this: Excel.OLEObject, parameter: { pctinfo: number }) => void): void;
     on(obj: Excel.OLEObject, event: 'Invoke', argNames: Excel.EventHelperTypes.OLEObject_Invoke_ArgNames, handler: (this: Excel.OLEObject, parameter: Excel.EventHelperTypes.OLEObject_Invoke_Parameter) => void): void;
-    on(obj: Excel.OLEObject, event: 'QueryInterface', argNames: ['riid', 'ppvObj'], handler: (this: Excel.OLEObject, parameter: {readonly riid: stdole.GUID, ppvObj: undefined}) => void): void;
-    on(obj: Excel.QueryTable, event: 'AfterRefresh', argNames: ['Success'], handler: (this: Excel.QueryTable, parameter: {readonly Success: boolean}) => void): void;
-    on(obj: Excel.QueryTable, event: 'BeforeRefresh', argNames: ['Cancel'], handler: (this: Excel.QueryTable, parameter: {Cancel: boolean}) => void): void;
-    on(obj: Excel.QueryTable, event: 'GetIDsOfNames', argNames: ['riid', 'rgszNames', 'cNames', 'lcid', 'rgdispid'], handler: (this: Excel.QueryTable, parameter: {readonly riid: stdole.GUID, readonly rgszNames: number, readonly cNames: number, readonly lcid: number, rgdispid: number}) => void): void;
-    on(obj: Excel.QueryTable, event: 'GetTypeInfo', argNames: ['itinfo', 'lcid', 'pptinfo'], handler: (this: Excel.QueryTable, parameter: {readonly itinfo: number, readonly lcid: number, pptinfo: undefined}) => void): void;
-    on(obj: Excel.QueryTable, event: 'GetTypeInfoCount', argNames: ['pctinfo'], handler: (this: Excel.QueryTable, parameter: {pctinfo: number}) => void): void;
+    on(obj: Excel.OLEObject, event: 'QueryInterface', argNames: ['riid', 'ppvObj'], handler: (this: Excel.OLEObject, parameter: { readonly riid: stdole.GUID, ppvObj: undefined }) => void): void;
+    on(obj: Excel.QueryTable, event: 'AfterRefresh', argNames: ['Success'], handler: (this: Excel.QueryTable, parameter: { readonly Success: boolean }) => void): void;
+    on(obj: Excel.QueryTable, event: 'BeforeRefresh', argNames: ['Cancel'], handler: (this: Excel.QueryTable, parameter: { Cancel: boolean }) => void): void;
+    on(obj: Excel.QueryTable, event: 'GetIDsOfNames', argNames: ['riid', 'rgszNames', 'cNames', 'lcid', 'rgdispid'], handler: (this: Excel.QueryTable, parameter: { readonly riid: stdole.GUID, readonly rgszNames: number, readonly cNames: number, readonly lcid: number, rgdispid: number }) => void): void;
+    on(obj: Excel.QueryTable, event: 'GetTypeInfo', argNames: ['itinfo', 'lcid', 'pptinfo'], handler: (this: Excel.QueryTable, parameter: { readonly itinfo: number, readonly lcid: number, pptinfo: undefined }) => void): void;
+    on(obj: Excel.QueryTable, event: 'GetTypeInfoCount', argNames: ['pctinfo'], handler: (this: Excel.QueryTable, parameter: { pctinfo: number }) => void): void;
     on(obj: Excel.QueryTable, event: 'Invoke', argNames: Excel.EventHelperTypes.QueryTable_Invoke_ArgNames, handler: (this: Excel.QueryTable, parameter: Excel.EventHelperTypes.QueryTable_Invoke_Parameter) => void): void;
-    on(obj: Excel.QueryTable, event: 'QueryInterface', argNames: ['riid', 'ppvObj'], handler: (this: Excel.QueryTable, parameter: {readonly riid: stdole.GUID, ppvObj: undefined}) => void): void;
-    on(obj: Excel.Workbook, event: 'AfterSave', argNames: ['Success'], handler: (this: Excel.Workbook, parameter: {readonly Success: boolean}) => void): void;
-    on(obj: Excel.Workbook, event: 'AfterXmlExport', argNames: ['Map', 'Url', 'Result'], handler: (this: Excel.Workbook, parameter: {readonly Map: Excel.XmlMap, readonly Url: string, readonly Result: Excel.XlXmlExportResult}) => void): void;
-    on(obj: Excel.Workbook, event: 'AfterXmlImport', argNames: ['Map', 'IsRefresh', 'Result'], handler: (this: Excel.Workbook, parameter: {readonly Map: Excel.XmlMap, readonly IsRefresh: boolean, readonly Result: Excel.XlXmlImportResult}) => void): void;
-    on(obj: Excel.Workbook, event: 'BeforeClose' | 'BeforePrint', argNames: ['Cancel'], handler: (this: Excel.Workbook, parameter: {Cancel: boolean}) => void): void;
-    on(obj: Excel.Workbook, event: 'BeforeSave', argNames: ['SaveAsUI', 'Cancel'], handler: (this: Excel.Workbook, parameter: {readonly SaveAsUI: boolean, Cancel: boolean}) => void): void;
-    on(obj: Excel.Workbook, event: 'BeforeXmlExport', argNames: ['Map', 'Url', 'Cancel'], handler: (this: Excel.Workbook, parameter: {readonly Map: Excel.XmlMap, readonly Url: string, Cancel: boolean}) => void): void;
-    on(obj: Excel.Workbook, event: 'BeforeXmlImport', argNames: ['Map', 'Url', 'IsRefresh', 'Cancel'], handler: (this: Excel.Workbook, parameter: {readonly Map: Excel.XmlMap, readonly Url: string, readonly IsRefresh: boolean, Cancel: boolean}) => void): void;
-    on(obj: Excel.Workbook, event: 'GetIDsOfNames', argNames: ['riid', 'rgszNames', 'cNames', 'lcid', 'rgdispid'], handler: (this: Excel.Workbook, parameter: {readonly riid: stdole.GUID, readonly rgszNames: number, readonly cNames: number, readonly lcid: number, rgdispid: number}) => void): void;
-    on(obj: Excel.Workbook, event: 'GetTypeInfo', argNames: ['itinfo', 'lcid', 'pptinfo'], handler: (this: Excel.Workbook, parameter: {readonly itinfo: number, readonly lcid: number, pptinfo: undefined}) => void): void;
-    on(obj: Excel.Workbook, event: 'GetTypeInfoCount', argNames: ['pctinfo'], handler: (this: Excel.Workbook, parameter: {pctinfo: number}) => void): void;
+    on(obj: Excel.QueryTable, event: 'QueryInterface', argNames: ['riid', 'ppvObj'], handler: (this: Excel.QueryTable, parameter: { readonly riid: stdole.GUID, ppvObj: undefined }) => void): void;
+    on(obj: Excel.Workbook, event: 'AfterSave', argNames: ['Success'], handler: (this: Excel.Workbook, parameter: { readonly Success: boolean }) => void): void;
+    on(obj: Excel.Workbook, event: 'AfterXmlExport', argNames: ['Map', 'Url', 'Result'], handler: (this: Excel.Workbook, parameter: { readonly Map: Excel.XmlMap, readonly Url: string, readonly Result: Excel.XlXmlExportResult }) => void): void;
+    on(obj: Excel.Workbook, event: 'AfterXmlImport', argNames: ['Map', 'IsRefresh', 'Result'], handler: (this: Excel.Workbook, parameter: { readonly Map: Excel.XmlMap, readonly IsRefresh: boolean, readonly Result: Excel.XlXmlImportResult }) => void): void;
+    on(obj: Excel.Workbook, event: 'BeforeClose' | 'BeforePrint', argNames: ['Cancel'], handler: (this: Excel.Workbook, parameter: { Cancel: boolean }) => void): void;
+    on(obj: Excel.Workbook, event: 'BeforeSave', argNames: ['SaveAsUI', 'Cancel'], handler: (this: Excel.Workbook, parameter: { readonly SaveAsUI: boolean, Cancel: boolean }) => void): void;
+    on(obj: Excel.Workbook, event: 'BeforeXmlExport', argNames: ['Map', 'Url', 'Cancel'], handler: (this: Excel.Workbook, parameter: { readonly Map: Excel.XmlMap, readonly Url: string, Cancel: boolean }) => void): void;
+    on(obj: Excel.Workbook, event: 'BeforeXmlImport', argNames: ['Map', 'Url', 'IsRefresh', 'Cancel'], handler: (this: Excel.Workbook, parameter: { readonly Map: Excel.XmlMap, readonly Url: string, readonly IsRefresh: boolean, Cancel: boolean }) => void): void;
+    on(obj: Excel.Workbook, event: 'GetIDsOfNames', argNames: ['riid', 'rgszNames', 'cNames', 'lcid', 'rgdispid'], handler: (this: Excel.Workbook, parameter: { readonly riid: stdole.GUID, readonly rgszNames: number, readonly cNames: number, readonly lcid: number, rgdispid: number }) => void): void;
+    on(obj: Excel.Workbook, event: 'GetTypeInfo', argNames: ['itinfo', 'lcid', 'pptinfo'], handler: (this: Excel.Workbook, parameter: { readonly itinfo: number, readonly lcid: number, pptinfo: undefined }) => void): void;
+    on(obj: Excel.Workbook, event: 'GetTypeInfoCount', argNames: ['pctinfo'], handler: (this: Excel.Workbook, parameter: { pctinfo: number }) => void): void;
     on(obj: Excel.Workbook, event: 'Invoke', argNames: Excel.EventHelperTypes.Workbook_Invoke_ArgNames, handler: (this: Excel.Workbook, parameter: Excel.EventHelperTypes.Workbook_Invoke_Parameter) => void): void;
-    on(obj: Excel.Workbook, event: 'NewChart', argNames: ['Ch'], handler: (this: Excel.Workbook, parameter: {readonly Ch: Excel.Chart}) => void): void;
-    on(obj: Excel.Workbook, event: 'NewSheet' | 'SheetActivate' | 'SheetCalculate' | 'SheetDeactivate', argNames: ['Sh'], handler: (this: Excel.Workbook, parameter: {readonly Sh: any}) => void): void;
-    on(obj: Excel.Workbook, event: 'PivotTableCloseConnection' | 'PivotTableOpenConnection', argNames: ['Target'], handler: (this: Excel.Workbook, parameter: {readonly Target: Excel.PivotTable}) => void): void;
-    on(obj: Excel.Workbook, event: 'QueryInterface', argNames: ['riid', 'ppvObj'], handler: (this: Excel.Workbook, parameter: {readonly riid: stdole.GUID, ppvObj: undefined}) => void): void;
-    on(obj: Excel.Workbook, event: 'RowsetComplete', argNames: ['Description', 'Sheet', 'Success'], handler: (this: Excel.Workbook, parameter: {readonly Description: string, readonly Sheet: string, readonly Success: boolean}) => void): void;
-    on(obj: Excel.Workbook, event: 'SheetBeforeDoubleClick' | 'SheetBeforeRightClick', argNames: ['Sh', 'Target', 'Cancel'], handler: (this: Excel.Workbook, parameter: {readonly Sh: any, readonly Target: Excel.Range, Cancel: boolean}) => void): void;
-    on(obj: Excel.Workbook, event: 'SheetChange' | 'SheetSelectionChange', argNames: ['Sh', 'Target'], handler: (this: Excel.Workbook, parameter: {readonly Sh: any, readonly Target: Excel.Range}) => void): void;
-    on(obj: Excel.Workbook, event: 'SheetFollowHyperlink', argNames: ['Sh', 'Target'], handler: (this: Excel.Workbook, parameter: {readonly Sh: any, readonly Target: Excel.Hyperlink}) => void): void;
-    on(obj: Excel.Workbook, event: 'SheetPivotTableAfterValueChange', argNames: ['Sh', 'TargetPivotTable', 'TargetRange'], handler: (this: Excel.Workbook, parameter: {readonly Sh: any, readonly TargetPivotTable: Excel.PivotTable, readonly TargetRange: Excel.Range}) => void): void;
-    on(obj: Excel.Workbook, event: 'SheetPivotTableBeforeAllocateChanges' | 'SheetPivotTableBeforeCommitChanges', argNames: ['Sh', 'TargetPivotTable', 'ValueChangeStart', 'ValueChangeEnd', 'Cancel'], handler: (this: Excel.Workbook, parameter: {readonly Sh: any, readonly TargetPivotTable: Excel.PivotTable, readonly ValueChangeStart: number, readonly ValueChangeEnd: number, Cancel: boolean}) => void): void;
-    on(obj: Excel.Workbook, event: 'SheetPivotTableBeforeDiscardChanges', argNames: ['Sh', 'TargetPivotTable', 'ValueChangeStart', 'ValueChangeEnd'], handler: (this: Excel.Workbook, parameter: {readonly Sh: any, readonly TargetPivotTable: Excel.PivotTable, readonly ValueChangeStart: number, readonly ValueChangeEnd: number}) => void): void;
-    on(obj: Excel.Workbook, event: 'SheetPivotTableChangeSync' | 'SheetPivotTableUpdate', argNames: ['Sh', 'Target'], handler: (this: Excel.Workbook, parameter: {readonly Sh: any, readonly Target: Excel.PivotTable}) => void): void;
-    on(obj: Excel.Workbook, event: 'Sync', argNames: ['SyncEventType'], handler: (this: Excel.Workbook, parameter: {readonly SyncEventType: Office.MsoSyncEventType}) => void): void;
-    on(obj: Excel.Workbook, event: 'WindowActivate' | 'WindowDeactivate' | 'WindowResize', argNames: ['Wn'], handler: (this: Excel.Workbook, parameter: {readonly Wn: Excel.Window}) => void): void;
-    on(obj: Excel.Worksheet, event: 'BeforeDoubleClick' | 'BeforeRightClick', argNames: ['Target', 'Cancel'], handler: (this: Excel.Worksheet, parameter: {readonly Target: Excel.Range, Cancel: boolean}) => void): void;
-    on(obj: Excel.Worksheet, event: 'Change' | 'SelectionChange', argNames: ['Target'], handler: (this: Excel.Worksheet, parameter: {readonly Target: Excel.Range}) => void): void;
-    on(obj: Excel.Worksheet, event: 'FollowHyperlink', argNames: ['Target'], handler: (this: Excel.Worksheet, parameter: {readonly Target: Excel.Hyperlink}) => void): void;
-    on(obj: Excel.Worksheet, event: 'GetIDsOfNames', argNames: ['riid', 'rgszNames', 'cNames', 'lcid', 'rgdispid'], handler: (this: Excel.Worksheet, parameter: {readonly riid: stdole.GUID, readonly rgszNames: number, readonly cNames: number, readonly lcid: number, rgdispid: number}) => void): void;
-    on(obj: Excel.Worksheet, event: 'GetTypeInfo', argNames: ['itinfo', 'lcid', 'pptinfo'], handler: (this: Excel.Worksheet, parameter: {readonly itinfo: number, readonly lcid: number, pptinfo: undefined}) => void): void;
-    on(obj: Excel.Worksheet, event: 'GetTypeInfoCount', argNames: ['pctinfo'], handler: (this: Excel.Worksheet, parameter: {pctinfo: number}) => void): void;
+    on(obj: Excel.Workbook, event: 'NewChart', argNames: ['Ch'], handler: (this: Excel.Workbook, parameter: { readonly Ch: Excel.Chart }) => void): void;
+    on(obj: Excel.Workbook, event: 'NewSheet' | 'SheetActivate' | 'SheetCalculate' | 'SheetDeactivate', argNames: ['Sh'], handler: (this: Excel.Workbook, parameter: { readonly Sh: any }) => void): void;
+    on(obj: Excel.Workbook, event: 'PivotTableCloseConnection' | 'PivotTableOpenConnection', argNames: ['Target'], handler: (this: Excel.Workbook, parameter: { readonly Target: Excel.PivotTable }) => void): void;
+    on(obj: Excel.Workbook, event: 'QueryInterface', argNames: ['riid', 'ppvObj'], handler: (this: Excel.Workbook, parameter: { readonly riid: stdole.GUID, ppvObj: undefined }) => void): void;
+    on(obj: Excel.Workbook, event: 'RowsetComplete', argNames: ['Description', 'Sheet', 'Success'], handler: (this: Excel.Workbook, parameter: { readonly Description: string, readonly Sheet: string, readonly Success: boolean }) => void): void;
+    on(obj: Excel.Workbook, event: 'SheetBeforeDoubleClick' | 'SheetBeforeRightClick', argNames: ['Sh', 'Target', 'Cancel'], handler: (this: Excel.Workbook, parameter: { readonly Sh: any, readonly Target: Excel.Range, Cancel: boolean }) => void): void;
+    on(obj: Excel.Workbook, event: 'SheetChange' | 'SheetSelectionChange', argNames: ['Sh', 'Target'], handler: (this: Excel.Workbook, parameter: { readonly Sh: any, readonly Target: Excel.Range }) => void): void;
+    on(obj: Excel.Workbook, event: 'SheetFollowHyperlink', argNames: ['Sh', 'Target'], handler: (this: Excel.Workbook, parameter: { readonly Sh: any, readonly Target: Excel.Hyperlink }) => void): void;
+    on(obj: Excel.Workbook, event: 'SheetPivotTableAfterValueChange', argNames: ['Sh', 'TargetPivotTable', 'TargetRange'], handler: (this: Excel.Workbook, parameter: { readonly Sh: any, readonly TargetPivotTable: Excel.PivotTable, readonly TargetRange: Excel.Range }) => void): void;
+    on(obj: Excel.Workbook, event: 'SheetPivotTableBeforeAllocateChanges' | 'SheetPivotTableBeforeCommitChanges', argNames: ['Sh', 'TargetPivotTable', 'ValueChangeStart', 'ValueChangeEnd', 'Cancel'], handler: (this: Excel.Workbook, parameter: { readonly Sh: any, readonly TargetPivotTable: Excel.PivotTable, readonly ValueChangeStart: number, readonly ValueChangeEnd: number, Cancel: boolean }) => void): void;
+    on(obj: Excel.Workbook, event: 'SheetPivotTableBeforeDiscardChanges', argNames: ['Sh', 'TargetPivotTable', 'ValueChangeStart', 'ValueChangeEnd'], handler: (this: Excel.Workbook, parameter: { readonly Sh: any, readonly TargetPivotTable: Excel.PivotTable, readonly ValueChangeStart: number, readonly ValueChangeEnd: number }) => void): void;
+    on(obj: Excel.Workbook, event: 'SheetPivotTableChangeSync' | 'SheetPivotTableUpdate', argNames: ['Sh', 'Target'], handler: (this: Excel.Workbook, parameter: { readonly Sh: any, readonly Target: Excel.PivotTable }) => void): void;
+    on(obj: Excel.Workbook, event: 'Sync', argNames: ['SyncEventType'], handler: (this: Excel.Workbook, parameter: { readonly SyncEventType: Office.MsoSyncEventType }) => void): void;
+    on(obj: Excel.Workbook, event: 'WindowActivate' | 'WindowDeactivate' | 'WindowResize', argNames: ['Wn'], handler: (this: Excel.Workbook, parameter: { readonly Wn: Excel.Window }) => void): void;
+    on(obj: Excel.Worksheet, event: 'BeforeDoubleClick' | 'BeforeRightClick', argNames: ['Target', 'Cancel'], handler: (this: Excel.Worksheet, parameter: { readonly Target: Excel.Range, Cancel: boolean }) => void): void;
+    on(obj: Excel.Worksheet, event: 'Change' | 'SelectionChange', argNames: ['Target'], handler: (this: Excel.Worksheet, parameter: { readonly Target: Excel.Range }) => void): void;
+    on(obj: Excel.Worksheet, event: 'FollowHyperlink', argNames: ['Target'], handler: (this: Excel.Worksheet, parameter: { readonly Target: Excel.Hyperlink }) => void): void;
+    on(obj: Excel.Worksheet, event: 'GetIDsOfNames', argNames: ['riid', 'rgszNames', 'cNames', 'lcid', 'rgdispid'], handler: (this: Excel.Worksheet, parameter: { readonly riid: stdole.GUID, readonly rgszNames: number, readonly cNames: number, readonly lcid: number, rgdispid: number }) => void): void;
+    on(obj: Excel.Worksheet, event: 'GetTypeInfo', argNames: ['itinfo', 'lcid', 'pptinfo'], handler: (this: Excel.Worksheet, parameter: { readonly itinfo: number, readonly lcid: number, pptinfo: undefined }) => void): void;
+    on(obj: Excel.Worksheet, event: 'GetTypeInfoCount', argNames: ['pctinfo'], handler: (this: Excel.Worksheet, parameter: { pctinfo: number }) => void): void;
     on(obj: Excel.Worksheet, event: 'Invoke', argNames: Excel.EventHelperTypes.Worksheet_Invoke_ArgNames, handler: (this: Excel.Worksheet, parameter: Excel.EventHelperTypes.Worksheet_Invoke_Parameter) => void): void;
-    on(obj: Excel.Worksheet, event: 'PivotTableAfterValueChange', argNames: ['TargetPivotTable', 'TargetRange'], handler: (this: Excel.Worksheet, parameter: {readonly TargetPivotTable: Excel.PivotTable, readonly TargetRange: Excel.Range}) => void): void;
-    on(obj: Excel.Worksheet, event: 'PivotTableBeforeAllocateChanges' | 'PivotTableBeforeCommitChanges', argNames: ['TargetPivotTable', 'ValueChangeStart', 'ValueChangeEnd', 'Cancel'], handler: (this: Excel.Worksheet, parameter: {readonly TargetPivotTable: Excel.PivotTable, readonly ValueChangeStart: number, readonly ValueChangeEnd: number, Cancel: boolean}) => void): void;
-    on(obj: Excel.Worksheet, event: 'PivotTableBeforeDiscardChanges', argNames: ['TargetPivotTable', 'ValueChangeStart', 'ValueChangeEnd'], handler: (this: Excel.Worksheet, parameter: {readonly TargetPivotTable: Excel.PivotTable, readonly ValueChangeStart: number, readonly ValueChangeEnd: number}) => void): void;
-    on(obj: Excel.Worksheet, event: 'PivotTableChangeSync' | 'PivotTableUpdate', argNames: ['Target'], handler: (this: Excel.Worksheet, parameter: {readonly Target: Excel.PivotTable}) => void): void;
-    on(obj: Excel.Worksheet, event: 'QueryInterface', argNames: ['riid', 'ppvObj'], handler: (this: Excel.Worksheet, parameter: {readonly riid: stdole.GUID, ppvObj: undefined}) => void): void;
+    on(obj: Excel.Worksheet, event: 'PivotTableAfterValueChange', argNames: ['TargetPivotTable', 'TargetRange'], handler: (this: Excel.Worksheet, parameter: { readonly TargetPivotTable: Excel.PivotTable, readonly TargetRange: Excel.Range }) => void): void;
+    on(obj: Excel.Worksheet, event: 'PivotTableBeforeAllocateChanges' | 'PivotTableBeforeCommitChanges', argNames: ['TargetPivotTable', 'ValueChangeStart', 'ValueChangeEnd', 'Cancel'], handler: (this: Excel.Worksheet, parameter: { readonly TargetPivotTable: Excel.PivotTable, readonly ValueChangeStart: number, readonly ValueChangeEnd: number, Cancel: boolean }) => void): void;
+    on(obj: Excel.Worksheet, event: 'PivotTableBeforeDiscardChanges', argNames: ['TargetPivotTable', 'ValueChangeStart', 'ValueChangeEnd'], handler: (this: Excel.Worksheet, parameter: { readonly TargetPivotTable: Excel.PivotTable, readonly ValueChangeStart: number, readonly ValueChangeEnd: number }) => void): void;
+    on(obj: Excel.Worksheet, event: 'PivotTableChangeSync' | 'PivotTableUpdate', argNames: ['Target'], handler: (this: Excel.Worksheet, parameter: { readonly Target: Excel.PivotTable }) => void): void;
+    on(obj: Excel.Worksheet, event: 'QueryInterface', argNames: ['riid', 'ppvObj'], handler: (this: Excel.Worksheet, parameter: { readonly riid: stdole.GUID, ppvObj: undefined }) => void): void;
     on(obj: Excel.Application, event: 'AddRef' | 'AfterCalculate' | 'Release', handler: (this: Excel.Application, parameter: {}) => void): void;
     on(obj: Excel.Chart, event: 'Activate' | 'AddRef' | 'Calculate' | 'Deactivate' | 'DragOver' | 'DragPlot' | 'Release' | 'Resize', handler: (this: Excel.Chart, parameter: {}) => void): void;
     on(obj: Excel.OLEObject, event: 'AddRef' | 'GotFocus' | 'LostFocus' | 'Release', handler: (this: Excel.OLEObject, parameter: {}) => void): void;
