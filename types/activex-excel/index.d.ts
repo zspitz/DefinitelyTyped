@@ -3040,7 +3040,7 @@ declare namespace Excel {
 
     interface AddIns {
         _Default(Index: number | string): AddIn;
-        Add(Filename: string, CopyFile?: any): AddIn;
+        Add(Filename: string, CopyFile?: boolean): AddIn;
         readonly Application: Application;
         readonly Count: number;
         readonly Creator: XlCreator;
@@ -3138,7 +3138,7 @@ declare namespace Excel {
         readonly Charts: Sheets;
         CheckAbort(KeepAbort?: boolean): void;
         CheckSpelling(Word: string, CustomDictionary?: string, IgnoreUppercase?: boolean): boolean;
-        ClipboardFormats: SafeArray<XlClipboardFormat> & ((Index: number) => any);
+        ClipboardFormats: SafeArray<XlClipboardFormat> & ((Index: number) => XlClipboardFormat);
         ClusterConnector: string;
         ColorButtons: boolean;
         readonly Columns: Range;
