@@ -16,9 +16,19 @@ const inCollection = <T = any>(collection: { Item(index: any): T }, index: strin
     return item;
 };
 
-const app = new ActiveXObject('Excel.Application');
-app.Visible = true;
+let app1: Excel.Application | null = new ActiveXObject('Excel.Application');
+app1.Visible = true;
+
+const formats = new VBArray(app1.ClipboardFormats).toArray();
+for (const format of formats) {
+    WScript.Echo(format);
+}
+app1.Quit();
+app1 = null;
+
 WScript.Quit();
+
+const app = new ActiveXObject('Excel.Application');
 
 // create a workbook -- https://msdn.microsoft.com/en-us/vba/excel-vba/articles/create-a-workbook
 const newBook = app.Workbooks.Add();

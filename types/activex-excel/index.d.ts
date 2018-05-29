@@ -3138,7 +3138,7 @@ declare namespace Excel {
         readonly Charts: Sheets;
         CheckAbort(KeepAbort?: boolean): void;
         CheckSpelling(Word: string, CustomDictionary?: string, IgnoreUppercase?: boolean): boolean;
-        ClipboardFormats(Index?: any): SafeArray<XlClipboardFormat>;
+        ClipboardFormats: SafeArray<XlClipboardFormat> & ((Index: number) => any);
         ClusterConnector: string;
         ColorButtons: boolean;
         readonly Columns: Range;
@@ -3261,7 +3261,7 @@ declare namespace Excel {
         InchesToPoints(Inches: number): number;
         InputBox(Prompt: string, Title?: string, Default?: string, Left?: number, Top?: number, HelpFile?: string, HelpContextID?: number, Type?: InputBoxReturnType): string | number | boolean | Range | Error | SafeArray<string> | SafeArray<number> | SafeArray<boolean>;
         Interactive: boolean;
-        International<T>(Index: T): InternationalResult<T>;
+        International: SafeArray & (<T>(Index: T) => InternationalResult<T>);
         Intersect(Arg1: Range, Arg2: Range, Arg3?: Range, Arg4?: Range, Arg5?: Range, Arg6?: Range, Arg7?: Range, Arg8?: Range, Arg9?: Range, Arg10?: Range, Arg11?: Range, Arg12?: Range, Arg13?: Range, Arg14?: Range, Arg15?: Range, Arg16?: Range, Arg17?: Range, Arg18?: Range, Arg19?: Range, Arg20?: Range, Arg21?: Range, Arg22?: Range, Arg23?: Range, Arg24?: Range, Arg25?: Range, Arg26?: Range, Arg27?: Range, Arg28?: Range, Arg29?: Range, Arg30?: Range): Range;
         readonly IsSandboxed: boolean;
         Iteration: boolean;
@@ -3270,7 +3270,7 @@ declare namespace Excel {
         LargeOperationCellThousandCount: number;
         Left: number;
         readonly LibraryPath: string;
-        MacroOptions(Macro?: string, Description?: string, HasMenu?: undefined, MenuText?: undefined, HasShortcutKey?: boolean, ShortcutKey?: any, Category?: Excel.FunctionCategory | string, StatusBar?: string, HelpContextID?: number, HelpFile?: string, ArgumentDescriptions?: SafeArray<string>): void;
+        MacroOptions(Macro?: string, Description?: string, HasMenu?: undefined, MenuText?: undefined, HasShortcutKey?: boolean, ShortcutKey?: any, Category?: FunctionCategory | string, StatusBar?: string, HelpContextID?: number, HelpFile?: string, ArgumentDescriptions?: SafeArray<string>): void;
         MailLogoff(): void;
         MailLogon(Name?: string, Password?: string, DownloadNewMail?: boolean): void;
         readonly MailSession: string | null;
@@ -3919,6 +3919,16 @@ declare namespace Excel {
         Type: number;
         readonly UpBars: UpBars;
         VaryByCategories: boolean;
+    }
+
+    class ChartGroups {
+        private 'Excel.ChartGroups_typekey': ChartGroups;
+        private constructor();
+        readonly Application: Application;
+        readonly Count: number;
+        readonly Creator: XlCreator;
+        Item(Index: any): ChartGroup;
+        readonly Parent: any;
     }
 
     class ChartTitle {
