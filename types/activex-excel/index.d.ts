@@ -17,6 +17,12 @@ declare namespace Excel {
 
     type LineStyle = XlLineStyle | Constants.xlGray25 | Constants.xlGray50 | Constants.xlGray75 | Constants.xlAutomatic;
 
+    type HorizontalAlignments = Constants.xlCenter | Constants.xlDistributed | Constants.xlJustify | Constants.xlLeft | Constants.xlRight;
+
+    type VerticalAlignments = Constants.xlBottom | Constants.xlCenter | Constants.xlDistributed | Constants.xlJustify | Constants.xlTop;
+
+    type Sheet = Worksheet | Chart | DialogSheet;
+
     const enum Constants {
         xl3DBar = -4099,
         xl3DEffects1 = 13,
@@ -3097,7 +3103,7 @@ declare namespace Excel {
         readonly ActiveMenuBar: MenuBar;
         ActivePrinter: string;
         readonly ActiveProtectedViewWindow: ProtectedViewWindow;
-        readonly ActiveSheet: Worksheet | Chart | DialogSheet;
+        readonly ActiveSheet: Sheet;
         readonly ActiveWindow: Window;
         readonly ActiveWorkbook: Workbook;
         AddChartAutoFormat(Chart: any, Name: string, Description?: any): void;
@@ -3188,7 +3194,7 @@ declare namespace Excel {
         DisplayRecentFiles: boolean;
         DisplayScrollBars: boolean;
         DisplayStatusBar: boolean;
-        DisplayXMLSourcePane(XmlMap?: any): void;
+        DisplayXMLSourcePane(XmlMap?: XmlMap): void;
         DoubleClick(): void;
         Dummy1(Arg1?: any, Arg2?: any, Arg3?: any, Arg4?: any): any;
         Dummy10(arg?: any): boolean;
@@ -3255,7 +3261,7 @@ declare namespace Excel {
         Help(HelpFile?: string, HelpContextID?: number): void;
         HighQualityModeForGraphics: boolean;
         readonly Hinstance: number;
-        readonly HinstancePtr: any;
+        readonly HinstancePtr: number;
         readonly Hwnd: number;
         IgnoreRemoteRequests: boolean;
         InchesToPoints(Inches: number): number;
@@ -3270,7 +3276,7 @@ declare namespace Excel {
         LargeOperationCellThousandCount: number;
         Left: number;
         readonly LibraryPath: string;
-        MacroOptions(Macro?: string, Description?: string, HasMenu?: undefined, MenuText?: undefined, HasShortcutKey?: boolean, ShortcutKey?: any, Category?: FunctionCategory | string, StatusBar?: string, HelpContextID?: number, HelpFile?: string, ArgumentDescriptions?: SafeArray<string>): void;
+        MacroOptions(Macro?: string, Description?: string, HasMenu?: undefined, MenuText?: undefined, HasShortcutKey?: boolean, ShortcutKey?: string, Category?: FunctionCategory | string, StatusBar?: string, HelpContextID?: number, HelpFile?: string, ArgumentDescriptions?: SafeArray<string>): void;
         MailLogoff(): void;
         MailLogon(Name?: string, Password?: string, DownloadNewMail?: boolean): void;
         readonly MailSession: string | null;
@@ -3330,7 +3336,7 @@ declare namespace Excel {
         RecordMacro(BasicCode: '', XlmCode: ''): void;
         readonly RecordRelative: boolean;
         ReferenceStyle: XlReferenceStyle;
-        RegisteredFunctions(Index1: string | undefined, Index2?: string): any;
+        RegisteredFunctions(Index1: string | undefined, Index2?: string): SafeArray | null;
         RegisterXLL(Filename: string): boolean;
         Repeat(): void;
         ReplaceFormat: CellFormat;
@@ -3433,7 +3439,9 @@ declare namespace Excel {
     class AutoCorrect {
         private 'Excel.AutoCorrect_typekey': AutoCorrect;
         private constructor();
-        AddReplacement(What: string, Replacement: string): any;
+
+        /** @returns The string to be replaced */
+        AddReplacement(What: string, Replacement: string): string;
         readonly Application: Application;
         AutoExpandListRange: boolean;
         AutoFillFormulasInLists: boolean;
@@ -3441,7 +3449,9 @@ declare namespace Excel {
         CorrectCapsLock: boolean;
         CorrectSentenceCap: boolean;
         readonly Creator: XlCreator;
-        DeleteReplacement(What: string): any;
+
+        /** @returns The string to be replaced */
+        DeleteReplacement(What: string): string;
         DisplayAutoCorrectOptions: boolean;
         readonly Parent: any;
         ReplacementList(Index: number): SafeArray<string>;
@@ -3472,6 +3482,111 @@ declare namespace Excel {
         readonly Parent: any;
         Path: string;
         Time: number;
+    }
+
+    interface Axes {
+        /** @param AxisGroup [AxisGroup=1] */
+        _Default(Type: XlAxisType, AxisGroup?: XlAxisGroup): Axis;
+        readonly Application: Application;
+        readonly Count: number;
+        readonly Creator: XlCreator;
+
+        /** @param AxisGroup [AxisGroup=1] */
+        Item(Type: XlAxisType, AxisGroup?: XlAxisGroup): Axis;
+        readonly Parent: any;
+
+        /** @param AxisGroup [AxisGroup=1] */
+        (Type: XlAxisType, AxisGroup?: XlAxisGroup): Axis;
+    }
+
+    class Axis {
+        private 'Excel.Axis_typekey': Axis;
+        private constructor();
+        readonly Application: Application;
+        AxisBetweenCategories: boolean;
+        readonly AxisGroup: XlAxisGroup;
+        readonly AxisTitle: AxisTitle;
+        BaseUnit: XlTimeUnit;
+        BaseUnitIsAuto: boolean;
+        readonly Border: Border;
+        CategoryNames: SafeArray<string> | Range;
+        CategoryType: XlCategoryType;
+        readonly Creator: XlCreator;
+        Crosses: XlAxisCrosses;
+        CrossesAt: number;
+        Delete(): any;
+        DisplayUnit: XlDisplayUnit;
+        DisplayUnitCustom: number;
+        readonly DisplayUnitLabel: DisplayUnitLabel;
+        readonly Format: ChartFormat;
+        HasDisplayUnitLabel: boolean;
+        HasMajorGridlines: boolean;
+        HasMinorGridlines: boolean;
+        HasTitle: boolean;
+        readonly Height: number;
+        readonly Left: number;
+        LogBase: number;
+        readonly MajorGridlines: Gridlines;
+        MajorTickMark: XlTickMark;
+        MajorUnit: number;
+        MajorUnitIsAuto: boolean;
+        MajorUnitScale: XlTimeUnit;
+        MaximumScale: number;
+        MaximumScaleIsAuto: boolean;
+        MinimumScale: number;
+        MinimumScaleIsAuto: boolean;
+        readonly MinorGridlines: Gridlines;
+        MinorTickMark: XlTickMark;
+        MinorUnit: number;
+        MinorUnitIsAuto: boolean;
+        MinorUnitScale: XlTimeUnit;
+        readonly Parent: any;
+        ReversePlotOrder: boolean;
+        ScaleType: XlScaleType;
+        Select(): any;
+        TickLabelPosition: XlTickLabelPosition;
+        readonly TickLabels: TickLabels;
+        TickLabelSpacing: number;
+        TickLabelSpacingIsAuto: boolean;
+        TickMarkSpacing: number;
+        readonly Top: number;
+        Type: XlAxisType;
+        readonly Width: number;
+    }
+
+    class AxisTitle {
+        private 'Excel.AxisTitle_typekey': AxisTitle;
+        private constructor();
+        readonly Application: Application;
+        AutoScaleFont: any;
+        readonly Border: Border;
+        Caption: string;
+        Characters(Start?: number, Length?: number): Characters;
+        readonly Creator: XlCreator;
+        Delete(): any;
+        readonly Fill: ChartFillFormat;
+        readonly Font: Font;
+        readonly Format: ChartFormat;
+        Formula: string;
+        FormulaLocal: string;
+        FormulaR1C1: string;
+        FormulaR1C1Local: string;
+        readonly Height: number;
+        HorizontalAlignment: HorizontalAlignments;
+        IncludeInLayout: boolean;
+        readonly Interior: Interior;
+        Left: number;
+        readonly Name: string;
+        Orientation: number | XlOrientation;
+        readonly Parent: any;
+        Position: XlChartElementPosition;
+        ReadingOrder: number;
+        Select(): any;
+        Shadow: boolean;
+        Text: string;
+        Top: number;
+        VerticalAlignment: VerticalAlignments;
+        readonly Width: number;
     }
 
     class Border {
@@ -3604,7 +3719,7 @@ declare namespace Excel {
         readonly Creator: XlCreator;
         Font: Font;
         FormulaHidden: boolean | null;
-        HorizontalAlignment: Constants.xlCenter | Constants.xlDistributed | Constants.xlJustify | Constants.xlLeft | Constants.xlRight;
+        HorizontalAlignment: HorizontalAlignments;
         IndentLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
         Interior: Interior;
         Locked: boolean | null;
@@ -3614,7 +3729,7 @@ declare namespace Excel {
         Orientation: number | XlOrientation;
         readonly Parent: any;
         ShrinkToFit: boolean | null;
-        VerticalAlignment: Constants.xlBottom | Constants.xlCenter | Constants.xlDistributed | Constants.xlJustify | Constants.xlTop;
+        VerticalAlignment: VerticalAlignments;
         WrapText: boolean | null;
     }
 
@@ -3625,9 +3740,9 @@ declare namespace Excel {
         Caption: string;
         readonly Count: number;
         readonly Creator: XlCreator;
-        Delete(): any;
+        Delete(): null;
         readonly Font: Font;
-        Insert(String: string): any;
+        Insert(String: string | null): string;
         readonly Parent: any;
         PhoneticCharacters: string;
         Text: string;
@@ -3651,7 +3766,7 @@ declare namespace Excel {
         ApplyCustomType(ChartType: XlChartType, TypeName?: any): void;
 
         /** @param Type [Type=2] */
-        ApplyDataLabels(Type?: XlDataLabelsType, LegendKey?: any, AutoText?: any, HasLeaderLines?: any, ShowSeriesName?: any, ShowCategoryName?: any, ShowValue?: any, ShowPercentage?: any, ShowBubbleSize?: any, Separator?: any): void;
+        ApplyDataLabels(Type?: XlDataLabelsType, LegendKey?: boolean, AutoText?: boolean, HasLeaderLines?: boolean, ShowSeriesName?: boolean, ShowCategoryName?: boolean, ShowValue?: boolean, ShowPercentage?: boolean, ShowBubbleSize?: boolean, Separator?: string): void;
         ApplyLayout(Layout: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10, ChartType?: XlChartType): void;
         Arcs(Index?: any): any;
         readonly Area3DGroup: ChartGroup;
@@ -3660,26 +3775,26 @@ declare namespace Excel {
         AutoScaling: boolean;
 
         /** @param AxisGroup [AxisGroup=1] */
-        Axes(Type: XlAxisType, AxisGroup?: XlAxisGroup): any;
+        Axes(Type?: XlAxisType, AxisGroup?: XlAxisGroup): Axes | Axis;
         readonly BackWall: Walls;
         readonly Bar3DGroup: ChartGroup;
         BarGroups(Index?: any): any;
         BarShape: XlBarShape;
         Buttons(Index?: any): any;
         readonly ChartArea: ChartArea;
-        ChartGroups(Index?: number): ChartGroup | ChartGroups;
-        ChartObjects(Index?: any): any;
-        ChartStyle: any;
+        ChartObjects(Index?: SafeArray<string | number>): ChartObjects;
+        ChartObjects(Index: string | number): ChartObject;
+        ChartStyle: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48;
         readonly ChartTitle: ChartTitle;
         ChartType: XlChartType;
-        ChartWizard(Source?: any, Gallery?: any, Format?: any, PlotBy?: any, CategoryLabels?: any, SeriesLabels?: any, HasLegend?: any, Title?: any, CategoryTitle?: any, ValueTitle?: any, ExtraTitle?: any): void;
+        ChartWizard(Source?: Range, Gallery?: XlChartType, Format?: 1|2|3|4|5|6|7|8|9|10, PlotBy?: XlRowCol, CategoryLabels?: number, SeriesLabels?: number, HasLegend?: boolean, Title?: string, CategoryTitle?: string, ValueTitle?: string, ExtraTitle?: string): void;
         CheckBoxes(Index?: any): any;
-        CheckSpelling(CustomDictionary?: any, IgnoreUppercase?: any, AlwaysSuggest?: any, SpellLang?: any): void;
+        CheckSpelling(CustomDictionary?: string, IgnoreUppercase?: boolean, AlwaysSuggest?: boolean, SpellLang?: Office.MsoLanguageID): void;
         ClearToMatchStyle(): void;
         readonly CodeName: string;
         readonly Column3DGroup: ChartGroup;
         ColumnGroups(Index?: any): any;
-        Copy(Before?: any, After?: any): void;
+        Copy(Before?: Sheet, After?: Sheet): void;
         CopyChartBuild(): void;
 
         /**
@@ -3708,15 +3823,15 @@ declare namespace Excel {
         Dummy24: boolean;
         Dummy25: boolean;
         Elevation: number;
-        Evaluate(Name: any): any;
-        Export(Filename: string, FilterName?: any, Interactive?: any): boolean;
-        ExportAsFixedFormat(Type: XlFixedFormatType, Filename?: any, Quality?: any, IncludeDocProperties?: any, IgnorePrintAreas?: any, From?: any, To?: any, OpenAfterPublish?: any, FixedFormatExtClassPtr?: any): void;
+        Evaluate(Name: string): any;
+        Export(Filename: string, FilterName?: string, Interactive?: boolean): boolean;
+        ExportAsFixedFormat(Type: XlFixedFormatType, Filename?: string, Quality?: XlFixedFormatQuality, IncludeDocProperties?: boolean, IgnorePrintAreas?: boolean, From?: number, To?: number, OpenAfterPublish?: boolean, FixedFormatExtClassPtr?: any): void;
         readonly Floor: Floor;
         GapDepth: number;
         GetChartElement(x: number, y: number, ElementID: number, Arg1: number, Arg2: number): void;
         GroupBoxes(Index?: any): any;
         GroupObjects(Index?: any): any;
-        HasAxis(Index1?: any, Index2?: any): any;
+        HasAxis(Index1?: XlAxisType, Index2?: XlAxisGroup): boolean;
         HasDataTable: boolean;
         HasLegend: boolean;
         HasPivotFields: boolean;
@@ -3730,12 +3845,14 @@ declare namespace Excel {
         LineGroups(Index?: any): any;
         Lines(Index?: any): any;
         ListBoxes(Index?: any): any;
-        Location(Where: XlChartLocation, Name?: any): Chart;
+        Location(Where: XlChartLocation.xlLocationAsObject, Name: string): Chart;
+        Location(Where: XlChartLocation, Name?: string): Chart;
         readonly MailEnvelope: Office.MsoEnvelope;
-        Move(Before?: any, After?: any): void;
+        Move(Before?: Sheet, After?: Sheet): void;
         Name: string;
-        readonly Next: any;
-        OLEObjects(Index?: any): any;
+        readonly Next: Sheet;
+        OLEObjects(Index: number | string): OLEObject;
+        OLEObjects(): OLEObjects;
         OnDoubleClick: string;
         OnSheetActivate: string;
         OnSheetDeactivate: string;
@@ -3743,7 +3860,7 @@ declare namespace Excel {
         Ovals(Index?: any): any;
         readonly PageSetup: PageSetup;
         readonly Parent: any;
-        Paste(Type?: any): void;
+        Paste(Type?: XlPasteType.xlPasteAll | XlPasteType.xlPasteFormats | XlPasteType.xlPasteFormulas): void;
         Perspective: number;
         Pictures(Index?: any): any;
         readonly Pie3DGroup: ChartGroup;
@@ -3752,11 +3869,13 @@ declare namespace Excel {
         readonly PlotArea: PlotArea;
         PlotBy: XlRowCol;
         PlotVisibleOnly: boolean;
-        readonly Previous: any;
+        readonly Previous: Sheet;
         readonly PrintedCommentPages: number;
-        PrintOut(From?: any, To?: any, Copies?: any, Preview?: any, ActivePrinter?: any, PrintToFile?: any, Collate?: any, PrToFileName?: any): void;
-        PrintPreview(EnableChanges?: any): void;
-        Protect(Password?: any, DrawingObjects?: any, Contents?: any, Scenarios?: any, UserInterfaceOnly?: any): void;
+        PrintOut(From?: number, To?: number, Copies?: number, Preview?: boolean, ActivePrinter?: string, PrintToFile?: boolean, Collate?: boolean, PrToFileName?: string): void;
+        PrintPreview(EnableChanges?: boolean): void;
+
+        /** @param Scenarios Passing `true` for this argument is only valid on worksheets */
+        Protect(Password?: string, DrawingObjects?: boolean, Contents?: boolean, Scenarios?: false, UserInterfaceOnly?: boolean): void;
         readonly ProtectContents: boolean;
         ProtectData: boolean;
         readonly ProtectDrawingObjects: boolean;
@@ -3767,18 +3886,20 @@ declare namespace Excel {
         RadarGroups(Index?: any): any;
         Rectangles(Index?: any): any;
         Refresh(): void;
-        RightAngleAxes: any;
-        Rotation: any;
-        SaveAs(Filename: string, FileFormat?: any, Password?: any, WriteResPassword?: any, ReadOnlyRecommended?: any, CreateBackup?: any, AddToMru?: any, TextCodepage?: any, TextVisualLayout?: any, Local?: any): void;
+
+        /** `true` if the chart axes are at right angles, independent of chart rotation or elevation. Applies only to 3-D line, column, and bar charts. */
+        RightAngleAxes: boolean;
+        Rotation: number;
+        SaveAs(Filename: string, FileFormat?: XlFileFormat, Password?: string, WriteResPassword?: string, ReadOnlyRecommended?: boolean, CreateBackup?: boolean, AddToMru?: boolean, TextCodepage?: any, TextVisualLayout?: any, Local?: any): void;
         SaveChartTemplate(Filename: string): void;
         readonly Scripts: Office.Scripts;
         ScrollBars(Index?: any): any;
-        Select(Replace?: any): void;
-        SeriesCollection(Index?: any): any;
+        Select(Replace?: boolean): void;
+        SeriesCollection(Index?: number | string): SeriesCollection | Series;
         SetBackgroundPicture(Filename: string): void;
         SetDefaultChart(Name: any): void;
         SetElement(Element: Office.MsoChartElementType): void;
-        SetSourceData(Source: Range, PlotBy?: any): void;
+        SetSourceData(Source: Range, PlotBy?: XlRowCol): void;
         readonly Shapes: Shapes;
         ShowAllFieldButtons: boolean;
         ShowAxisFieldButtons: boolean;
@@ -3795,7 +3916,7 @@ declare namespace Excel {
         readonly Tab: Tab;
         TextBoxes(Index?: any): any;
         Type: number;
-        Unprotect(Password?: any): void;
+        Unprotect(Password?: string): void;
         Visible: XlSheetVisibility;
         readonly Walls: Walls;
         WallsAndGridlines2D: boolean;
@@ -3929,6 +4050,93 @@ declare namespace Excel {
         readonly Creator: XlCreator;
         Item(Index: any): ChartGroup;
         readonly Parent: any;
+    }
+
+    class ChartObject {
+        private 'Excel.ChartObject_typekey': ChartObject;
+        private constructor();
+        _Copy(): any;
+        Activate(): any;
+        readonly Application: Application;
+        readonly Border: Border;
+        readonly BottomRightCell: Range;
+        BringToFront(): any;
+        readonly Chart: Chart;
+        Copy(): any;
+
+        /**
+         * @param Appearance [Appearance=2]
+         * @param Format [Format=-4147]
+         */
+        CopyPicture(Appearance?: XlPictureAppearance, Format?: XlCopyPictureFormat): any;
+        readonly Creator: XlCreator;
+        Cut(): any;
+        Delete(): any;
+        Duplicate(): any;
+        Enabled: boolean;
+        Height: number;
+        readonly Index: number;
+        readonly Interior: Interior;
+        Left: number;
+        Locked: boolean;
+        Name: string;
+        OnAction: string;
+        readonly Parent: any;
+        Placement: any;
+        PrintObject: boolean;
+        ProtectChartObject: boolean;
+        RoundedCorners: boolean;
+        Select(Replace?: any): any;
+        SendToBack(): any;
+        Shadow: boolean;
+        readonly ShapeRange: ShapeRange;
+        Top: number;
+        readonly TopLeftCell: Range;
+        Visible: boolean;
+        Width: number;
+        readonly ZOrder: number;
+    }
+
+    interface ChartObjects {
+        _Copy(): any;
+        _Default(Index: any): any;
+        Add(Left: number, Top: number, Width: number, Height: number): ChartObject;
+        readonly Application: Application;
+        readonly Border: Border;
+        BringToFront(): any;
+        Copy(): any;
+
+        /**
+         * @param Appearance [Appearance=2]
+         * @param Format [Format=-4147]
+         */
+        CopyPicture(Appearance?: XlPictureAppearance, Format?: XlCopyPictureFormat): any;
+        readonly Count: number;
+        readonly Creator: XlCreator;
+        Cut(): any;
+        Delete(): any;
+        Duplicate(): any;
+        Enabled: boolean;
+        Group(): GroupObject;
+        Height: number;
+        readonly Interior: Interior;
+        Item(Index: any): any;
+        Left: number;
+        Locked: boolean;
+        OnAction: string;
+        readonly Parent: any;
+        Placement: any;
+        PrintObject: boolean;
+        ProtectChartObject: boolean;
+        RoundedCorners: boolean;
+        Select(Replace?: any): any;
+        SendToBack(): any;
+        Shadow: boolean;
+        readonly ShapeRange: ShapeRange;
+        Top: number;
+        Visible: boolean;
+        Width: number;
+        (Index: any): any;
     }
 
     class ChartTitle {
@@ -4393,7 +4601,7 @@ declare namespace Excel {
         Lines(Index?: any): any;
         ListBoxes(Index?: any): any;
         readonly MailEnvelope: Office.MsoEnvelope;
-        Move(Before?: any, After?: any): void;
+        Move(Before?: Sheet, After?: Sheet): void;
         Name: string;
         readonly Names: Names;
         readonly Next: any;
@@ -4464,6 +4672,40 @@ declare namespace Excel {
         readonly WrapText: any;
     }
 
+    class DisplayUnitLabel {
+        private 'Excel.DisplayUnitLabel_typekey': DisplayUnitLabel;
+        private constructor();
+        readonly Application: Application;
+        AutoScaleFont: any;
+        readonly Border: Border;
+        Caption: string;
+        Characters(Start?: any, Length?: any): Characters;
+        readonly Creator: XlCreator;
+        Delete(): any;
+        readonly Fill: ChartFillFormat;
+        readonly Font: Font;
+        readonly Format: ChartFormat;
+        Formula: string;
+        FormulaLocal: string;
+        FormulaR1C1: string;
+        FormulaR1C1Local: string;
+        readonly Height: number;
+        HorizontalAlignment: any;
+        readonly Interior: Interior;
+        Left: number;
+        readonly Name: string;
+        Orientation: any;
+        readonly Parent: any;
+        Position: XlChartElementPosition;
+        ReadingOrder: number;
+        Select(): any;
+        Shadow: boolean;
+        Text: string;
+        Top: number;
+        VerticalAlignment: any;
+        readonly Width: number;
+    }
+
     class DownBars {
         private 'Excel.DownBars_typekey': DownBars;
         private constructor();
@@ -4500,6 +4742,21 @@ declare namespace Excel {
         Ignore: boolean;
         readonly Parent: any;
         readonly Value: boolean;
+    }
+
+    class ErrorBars {
+        private 'Excel.ErrorBars_typekey': ErrorBars;
+        private constructor();
+        readonly Application: Application;
+        readonly Border: Border;
+        ClearFormats(): any;
+        readonly Creator: XlCreator;
+        Delete(): any;
+        EndStyle: XlEndStyleCap;
+        readonly Format: ChartFormat;
+        readonly Name: string;
+        readonly Parent: any;
+        Select(): any;
     }
 
     class ErrorCheckingOptions {
@@ -4772,6 +5029,73 @@ declare namespace Excel {
         Width: number;
     }
 
+    class Gridlines {
+        private 'Excel.Gridlines_typekey': Gridlines;
+        private constructor();
+        readonly Application: Application;
+        readonly Border: Border;
+        readonly Creator: XlCreator;
+        Delete(): any;
+        readonly Format: ChartFormat;
+        readonly Name: string;
+        readonly Parent: any;
+        Select(): any;
+    }
+
+    class GroupObject {
+        private 'Excel.GroupObject_typekey': GroupObject;
+        private constructor();
+        _Default: number;
+        AddIndent: boolean;
+        readonly Application: Application;
+        ArrowHeadLength: any;
+        ArrowHeadStyle: any;
+        ArrowHeadWidth: any;
+        AutoSize: boolean;
+        readonly Border: Border;
+        readonly BottomRightCell: Range;
+        BringToFront(): any;
+        CheckSpelling(CustomDictionary?: any, IgnoreUppercase?: any, AlwaysSuggest?: any, SpellLang?: any): any;
+        Copy(): any;
+
+        /**
+         * @param Appearance [Appearance=2]
+         * @param Format [Format=-4147]
+         */
+        CopyPicture(Appearance?: XlPictureAppearance, Format?: XlCopyPictureFormat): any;
+        readonly Creator: XlCreator;
+        Cut(): any;
+        Delete(): any;
+        Duplicate(): any;
+        Enabled: boolean;
+        readonly Font: Font;
+        Height: number;
+        HorizontalAlignment: any;
+        readonly Index: number;
+        readonly Interior: Interior;
+        Left: number;
+        Locked: boolean;
+        Name: string;
+        OnAction: string;
+        Orientation: any;
+        readonly Parent: any;
+        Placement: any;
+        PrintObject: boolean;
+        ReadingOrder: number;
+        RoundedCorners: boolean;
+        Select(Replace?: any): any;
+        SendToBack(): any;
+        Shadow: boolean;
+        readonly ShapeRange: ShapeRange;
+        Top: number;
+        readonly TopLeftCell: Range;
+        Ungroup(): any;
+        VerticalAlignment: any;
+        Visible: boolean;
+        Width: number;
+        readonly ZOrder: number;
+    }
+
     interface GroupShapes {
         _Default(Index: any): Shape;
         readonly Application: Application;
@@ -4909,6 +5233,18 @@ declare namespace Excel {
         PatternTintAndShade: any;
         ThemeColor: any;
         TintAndShade: any;
+    }
+
+    class LeaderLines {
+        private 'Excel.LeaderLines_typekey': LeaderLines;
+        private constructor();
+        readonly Application: Application;
+        readonly Border: Border;
+        readonly Creator: XlCreator;
+        Delete(): void;
+        readonly Format: ChartFormat;
+        readonly Parent: any;
+        Select(): void;
     }
 
     class Legend {
@@ -5491,6 +5827,48 @@ declare namespace Excel {
 
         /** @param Verb [Verb=1] */
         Verb(Verb?: XlOLEVerb): any;
+        Visible: boolean;
+        Width: number;
+        readonly ZOrder: number;
+    }
+
+    class OLEObjects {
+        private 'Excel.OLEObjects_typekey': OLEObjects;
+        private constructor();
+        Add(ClassType?: any, Filename?: any, Link?: any, DisplayAsIcon?: any, IconFileName?: any, IconIndex?: any, IconLabel?: any, Left?: any, Top?: any, Width?: any, Height?: any): OLEObject;
+        readonly Application: Application;
+        AutoLoad: boolean;
+        readonly Border: Border;
+        BringToFront(): any;
+        Copy(): any;
+
+        /**
+         * @param Appearance [Appearance=2]
+         * @param Format [Format=-4147]
+         */
+        CopyPicture(Appearance?: XlPictureAppearance, Format?: XlCopyPictureFormat): any;
+        readonly Count: number;
+        readonly Creator: XlCreator;
+        Cut(): any;
+        Delete(): any;
+        Duplicate(): any;
+        Enabled: boolean;
+        Group(): GroupObject;
+        Height: number;
+        readonly Interior: Interior;
+        Item(Index: any): any;
+        Left: number;
+        Locked: boolean;
+        OnAction: string;
+        readonly Parent: any;
+        Placement: any;
+        PrintObject: boolean;
+        Select(Replace?: any): any;
+        SendToBack(): any;
+        Shadow: boolean;
+        readonly ShapeRange: ShapeRange;
+        SourceName: string;
+        Top: number;
         Visible: boolean;
         Width: number;
         readonly ZOrder: number;
@@ -6727,6 +7105,90 @@ declare namespace Excel {
         ThrottleInterval: number;
     }
 
+    class Series {
+        private 'Excel.Series_typekey': Series;
+        private constructor();
+
+        /** @param Type [Type=2] */
+        _ApplyDataLabels(Type?: XlDataLabelsType, LegendKey?: any, AutoText?: any, HasLeaderLines?: any): any;
+        readonly Application: Application;
+        ApplyCustomType(ChartType: XlChartType): void;
+
+        /** @param Type [Type=2] */
+        ApplyDataLabels(Type?: XlDataLabelsType, LegendKey?: any, AutoText?: any, HasLeaderLines?: any, ShowSeriesName?: any, ShowCategoryName?: any, ShowValue?: any, ShowPercentage?: any, ShowBubbleSize?: any, Separator?: any): any;
+        ApplyPictToEnd: boolean;
+        ApplyPictToFront: boolean;
+        ApplyPictToSides: boolean;
+        AxisGroup: XlAxisGroup;
+        BarShape: XlBarShape;
+        readonly Border: Border;
+        BubbleSizes: any;
+        ChartType: XlChartType;
+        ClearFormats(): any;
+        Copy(): any;
+        readonly Creator: XlCreator;
+        DataLabels(Index?: any): any;
+        Delete(): any;
+        ErrorBar(Direction: XlErrorBarDirection, Include: XlErrorBarInclude, Type: XlErrorBarType, Amount?: any, MinusValues?: any): any;
+        readonly ErrorBars: ErrorBars;
+        Explosion: number;
+        readonly Fill: ChartFillFormat;
+        readonly Format: ChartFormat;
+        Formula: string;
+        FormulaLocal: string;
+        FormulaR1C1: string;
+        FormulaR1C1Local: string;
+        Has3DEffect: boolean;
+        HasDataLabels: boolean;
+        HasErrorBars: boolean;
+        HasLeaderLines: boolean;
+        readonly Interior: Interior;
+        InvertColor: number;
+        InvertColorIndex: number;
+        InvertIfNegative: boolean;
+        readonly LeaderLines: LeaderLines;
+        MarkerBackgroundColor: number;
+        MarkerBackgroundColorIndex: XlColorIndex;
+        MarkerForegroundColor: number;
+        MarkerForegroundColorIndex: XlColorIndex;
+        MarkerSize: number;
+        MarkerStyle: XlMarkerStyle;
+        Name: string;
+        readonly Parent: any;
+        Paste(): any;
+        PictureType: XlChartPictureType;
+        PictureUnit: number;
+        PictureUnit2: number;
+        readonly PlotColorIndex: number;
+        PlotOrder: number;
+        Points(Index?: any): any;
+        Select(): any;
+        Shadow: boolean;
+        Smooth: boolean;
+        Trendlines(Index?: any): any;
+        Type: number;
+        Values: any;
+        XValues: any;
+    }
+
+    interface SeriesCollection {
+        _Default(Index: any): Series;
+
+        /** @param Rowcol [Rowcol=-4105] */
+        Add(Source: any, Rowcol?: XlRowCol, SeriesLabels?: any, CategoryLabels?: any, Replace?: any): Series;
+        readonly Application: Application;
+        readonly Count: number;
+        readonly Creator: XlCreator;
+        Extend(Source: any, Rowcol?: any, CategoryLabels?: any): any;
+        Item(Index: any): Series;
+        NewSeries(): Series;
+        readonly Parent: any;
+
+        /** @param Rowcol [Rowcol=-4105] */
+        Paste(Rowcol?: XlRowCol, SeriesLabels?: any, CategoryLabels?: any, Replace?: any, NewSeries?: any): any;
+        (Index: any): Series;
+    }
+
     class SeriesLines {
         private 'Excel.SeriesLines_typekey': SeriesLines;
         private constructor();
@@ -7020,7 +7482,7 @@ declare namespace Excel {
         /** @param Type [Type=-4104] */
         FillAcrossSheets(Range: Range, Type?: XlFillWith): void;
         readonly HPageBreaks: HPageBreaks;
-        Item(Index: string | number): Worksheet | Chart | DialogSheet;
+        Item(Index: string | number): Sheet;
         Item(Indexes: SafeArray<string | number>): Sheets;
         Move(Before?: any, After?: any): void;
         readonly Parent: any;
@@ -7029,7 +7491,7 @@ declare namespace Excel {
         Select(Replace?: boolean): void;
         Visible: any;
         readonly VPageBreaks: VPageBreaks;
-        (Index: string | number): Worksheet | Chart | DialogSheet;
+        (Index: string | number): Sheet;
         (Indexes: SafeArray<string | number>): Sheets;
     }
 
@@ -8380,7 +8842,7 @@ declare namespace Excel {
         ListBoxes(Index?: any): any;
         readonly ListObjects: ListObjects;
         readonly MailEnvelope: Office.MsoEnvelope;
-        Move(Before?: any, After?: any): void;
+        Move(Before?: Sheet, After?: Sheet): void;
         Name: string;
         readonly Names: Names;
         readonly Next: any;
@@ -8992,7 +9454,7 @@ declare namespace Excel {
 
 interface EnumeratorConstructor {
     // we need this because there are two overloads for Item on the Sheets object
-    new(sheets: Excel.Sheets): Enumerator<Excel.Worksheet | Excel.Chart | Excel.DialogSheet>;
+    new(sheets: Excel.Sheets): Enumerator<Excel.Sheet>;
 }
 
 interface ActiveXObject {
@@ -9091,7 +9553,7 @@ interface ActiveXObject {
     on(obj: Excel.QueryTable, event: 'AddRef' | 'Release', handler: (this: Excel.QueryTable, parameter: {}) => void): void;
     on(obj: Excel.Workbook, event: 'Activate' | 'AddinInstall' | 'AddinUninstall' | 'AddRef' | 'Deactivate' | 'Open' | 'Release', handler: (this: Excel.Workbook, parameter: {}) => void): void;
     on(obj: Excel.Worksheet, event: 'Activate' | 'AddRef' | 'Calculate' | 'Deactivate' | 'Release', handler: (this: Excel.Worksheet, parameter: {}) => void): void;
-    set(obj: Excel.Chart, propertyName: 'HasAxis', parameterTypes: [any, any], newValue: any): void;
+    set(obj: Excel.Chart, propertyName: 'HasAxis', parameterTypes: [Excel.XlAxisType | undefined, Excel.XlAxisGroup | undefined], newValue: boolean): void;
     set(obj: Excel.Workbook, propertyName: 'Colors', parameterTypes: [any], newValue: any): void;
     set(obj: Excel.Range, propertyName: 'Value', parameterTypes: [Excel.XlRangeValueDataType], newValue: any): void;
 }

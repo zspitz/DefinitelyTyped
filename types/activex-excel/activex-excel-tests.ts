@@ -49,7 +49,7 @@ const newOrExistingWorksheet = () => {
 const replaceWorksheet = () => {
     const mySheetName = 'Sheet4';
     app.DisplayAlerts = false;
-    let mySheet = inCollection<Excel.Worksheet | Excel.Chart | Excel.DialogSheet>(app.Worksheets, mySheetName);
+    let mySheet = inCollection<Excel.Sheet>(app.Worksheets, mySheetName);
     if (mySheet) { mySheet.Delete(); }
     app.DisplayAlerts = true;
     mySheet = app.Worksheets.Add() as Excel.Worksheet;
@@ -307,12 +307,17 @@ const setColumnVisibility = (visible: boolean) => {
 
         const combobox = sheet.OLEObjects('ComboBox1').Object as MSForms.ComboBox;
         combobox.Clear();
-        const enumerator = new Enumerator(dict.Items());
+
+        // iterate over keys using Enumerator
+        const enumerator = new Enumerator(dict);
         enumerator.moveFirst();
         while (!enumerator.atEnd()) {
             combobox.AddItem(enumerator.item());
+            enumerator.moveNext();
         }
-    }
+
+        // alternatively, make a JS array out of the keys, and iterate using forEach
+        // new VBArray(dict.Keys()).toArray().forEach(x => combobox.AddItem(x));    }
 }
 
 // animating a sparkline -- https://msdn.microsoft.com/en-us/vba/excel-vba/articles/animate-a-sparkline
