@@ -4030,26 +4030,25 @@ declare namespace Excel {
         readonly Parent: any;
         readonly RadarAxisLabels: TickLabels;
         SecondPlotSize: number;
-        SeriesCollection(Index?: any): any;
+        SeriesCollection(Index?: number | string): SeriesCollection | Series;
         readonly SeriesLines: SeriesLines;
         ShowNegativeBubbles: boolean;
         SizeRepresents: XlSizeRepresents;
         SplitType: XlChartSplitType;
-        SplitValue: any;
+        SplitValue: number;
         SubType: number;
         Type: number;
         readonly UpBars: UpBars;
         VaryByCategories: boolean;
     }
 
-    class ChartGroups {
-        private 'Excel.ChartGroups_typekey': ChartGroups;
-        private constructor();
+    interface ChartGroups {
         readonly Application: Application;
         readonly Count: number;
         readonly Creator: XlCreator;
-        Item(Index: any): ChartGroup;
+        Item(Index: number): ChartGroup;
         readonly Parent: any;
+        (Index: number): ChartGroup;
     }
 
     class ChartObject {
@@ -4082,11 +4081,11 @@ declare namespace Excel {
         Name: string;
         OnAction: string;
         readonly Parent: any;
-        Placement: any;
+        Placement: XlPlacement;
         PrintObject: boolean;
         ProtectChartObject: boolean;
         RoundedCorners: boolean;
-        Select(Replace?: any): any;
+        Select(Replace?: boolean): any;
         SendToBack(): any;
         Shadow: boolean;
         readonly ShapeRange: ShapeRange;
@@ -4120,7 +4119,7 @@ declare namespace Excel {
         Group(): GroupObject;
         Height: number;
         readonly Interior: Interior;
-        Item(Index: any): any;
+        Item(Index: number | string): ChartObject;
         Left: number;
         Locked: boolean;
         OnAction: string;
